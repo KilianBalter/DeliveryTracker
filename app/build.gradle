@@ -51,4 +51,18 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-android:1.23.0'
     implementation 'com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+
+//    // https://mvnrepository.com/artifact/android.arch.persistence.room/runtime
+//    implementation 'android.arch.persistence.room:runtime:1.1.1'
+
+    implementation 'io.realm:realm-android-library:10.5.0'
+
 }
