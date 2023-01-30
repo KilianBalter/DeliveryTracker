@@ -13,7 +13,7 @@ public class DeliveryDAO {
 
     Realm realm;
 
-    DeliveryDAO(Context context){
+    public DeliveryDAO(Context context){
         Realm.init(context);
         realm = Realm.getDefaultInstance();
     }

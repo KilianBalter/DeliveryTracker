@@ -9,7 +9,7 @@ public class UserDataDAO {
 
     private final Context context;               //init in main?
 
-    UserDataDAO(Context context, String preferencesName){
+    public UserDataDAO(Context context, String preferencesName){
         this.context = context;
         this.preferencesName = preferencesName;
     }
