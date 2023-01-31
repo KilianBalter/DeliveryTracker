@@ -1,6 +1,18 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:10.11.1"
+    }
+}
+
 plugins {
     id 'com.android.application'
 }
+
+apply plugin: "realm-android"
 
 android {
     namespace 'com.example.th_android2022'
@@ -52,17 +64,17 @@ dependencies {
     implementation 'com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
 
-
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+// android studio is ja komplett behindi man ...
+//    compileOnly 'org.projectlombok:lombok:1.18.24'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+//
+//    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+//    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
 
 //    // https://mvnrepository.com/artifact/android.arch.persistence.room/runtime
 //    implementation 'android.arch.persistence.room:runtime:1.1.1'
 
-    implementation 'io.realm:realm-android-library:10.5.0'
-
+    implementation 'com.sun.mail:android-mail:1.6.2'
+    implementation 'com.sun.mail:android-activation:1.6.2'
 }
