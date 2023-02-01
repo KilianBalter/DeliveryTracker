@@ -26,11 +26,12 @@ public class DeliveryDAO {
 
     public void insertOnlySingleDelivery(Delivery delivery){
         //TODO User notification
-        //TODO maybe move update here
+
         Number maxId = realm.where(Delivery.class).max("id");
         int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
         delivery.setId(nextId);
 
+        System.out.println("inserting delivery " + delivery.getId());
         realm.executeTransaction(transactionRealm ->
                 transactionRealm.insert(delivery)
         );
@@ -41,6 +42,8 @@ public class DeliveryDAO {
                 equalTo("orderId", orderId).
                 equalTo("deliveryService", deliveryService).
                 findFirst();
+        if (result != null)
+            result = new Delivery(result);
         return result;
     }
 
@@ -50,15 +53,45 @@ public class DeliveryDAO {
                     equalTo("orderId", delivery.getOrderId()).
                     equalTo("deliveryService", delivery.getDeliveryService()).
                     findFirst();
-            storedDelivery.setStatus(delivery.getStatus());
-            storedDelivery.setTag(delivery.getTag());
-            storedDelivery.setEmailList(delivery.getEmailList());
+            if(storedDelivery != null) {
+                System.out.println("updating delivery " + delivery.getId());
+                storedDelivery.setStatus(delivery.getStatus());
+                storedDelivery.setTag(delivery.getTag());
+                storedDelivery.setEmailList(delivery.getEmailList());
+            }
+            else{
+                insertOnlySingleDelivery(delivery);
+            }
         });
     }
 
     public List<Delivery> findAllDelivery(){
         RealmResults<Delivery> results = realm.where(Delivery.class).findAll();
         return realm.copyFromRealm(results);
+    }
+
+    public void deleteById(long id){
+        realm.executeTransaction(transactionRealm -> {
+            RealmResults<Delivery> results = realm.where(Delivery.class).equalTo("id", id).findAll();
+            if(results.size() > 0) {
+                System.out.println("deleting delivery " + id);
+                results.deleteAllFromRealm();
+            }
+        });
+    }
+
+    public void deleteByOrderIdAndDeliveryService(String orderId, String deliveryService){
+        realm.executeTransaction(transactionRealm -> {
+            RealmResults<Delivery> results = realm.where(Delivery.class).
+                    equalTo("orderId", orderId).
+                    equalTo("deliveryService", deliveryService).
+                    findAll();
+
+            if(results.size() > 0) {
+                System.out.println("deleting delivery " + orderId + " " + deliveryService);
+                results.deleteAllFromRealm();
+            }
+        });
     }
 
 }

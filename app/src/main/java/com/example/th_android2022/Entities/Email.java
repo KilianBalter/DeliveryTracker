@@ -23,6 +23,13 @@ public class Email extends RealmObject {
         this.date = date;
     }
 
+    public Email(Email e) {
+        this.subject = e.subject;
+        this.sender = e.sender;
+        this.content = e.content;
+        this.date = e.date;
+    }
+
     public String getSubject() {
         return subject;
     }

@@ -25,7 +25,7 @@ import io.realm.RealmList;
 public class DeliveryTest {
 
     @Test
-    public void deliveryTest(){
+    public void insertTest(){
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DeliveryDAO repo = new DeliveryDAO(appContext);
         Delivery d = new Delivery();
@@ -39,10 +39,12 @@ public class DeliveryTest {
         assertEquals(new RealmList<>(), stored.getEmailList());
         assertEquals(d.getStatus(), stored.getStatus());
         assertEquals(d.getTag(), stored.getTag());
+
+        repo.deleteById(stored.getId());
     }
 
     @Test
-    public void deliveryUpdateTest(){
+    public void updateTest(){
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DeliveryDAO repo = new DeliveryDAO(appContext);
         Delivery d = new Delivery();
@@ -55,18 +57,29 @@ public class DeliveryTest {
 
         Email e = new Email("delivery", "amazon", "balblub", new Date(2000, 1, 1));
 
-        List<Email> emails = new LinkedList(result.getEmailList());
+        List<Email> emails = new LinkedList<>(result.getEmailList());
         emails.add(e);
+        result.setEmailList(emails);
         repo.updateOnlySingleDelivery(result);
 
-        allDeliveries = repo.findAllDelivery();
 
-        Delivery stored = allDeliveries.get(allDeliveries.size() - 1);
+        Delivery stored = repo.findFirstByOrderIdAndDeliveryService("1234", "dhl");
 
         assertEquals(deliveriesSize, allDeliveries.size());
         assertEquals(d.getDeliveryService(), stored.getDeliveryService());
-        assertEquals(emails, stored.getEmailList());
+        assertEquals(emails.size(), stored.getEmailList().size());
         assertEquals(d.getStatus(), stored.getStatus());
         assertEquals(d.getTag(), stored.getTag());
+
+        repo.deleteByOrderIdAndDeliveryService("1234", "dhl");
+    }
+
+
+    @Test
+    public void findTest(){
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        DeliveryDAO repo = new DeliveryDAO(appContext);
+        repo.deleteByOrderIdAndDeliveryService("-1", "abc");
+        assertEquals(null, repo.findFirstByOrderIdAndDeliveryService("-1", "abc"));
     }
 }

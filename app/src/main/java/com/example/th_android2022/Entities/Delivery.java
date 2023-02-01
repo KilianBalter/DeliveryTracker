@@ -26,9 +26,16 @@ public class Delivery extends RealmObject {
         emailList = new RealmList<>();
     }
 
-    public Delivery(long id) {
-        this();
-        this.id = id;
+    public Delivery(Delivery d) {
+        this.id = d.id;
+        this.emailList = new RealmList<>();
+        for (Email e: d.emailList){
+            this.emailList.add(new Email(e));
+        }
+        this.tag = d.tag;
+        this.status = d.status;
+        this.orderId = d.orderId;
+        this.deliveryService = d.deliveryService;
     }
 
     public void setId(long id) {
@@ -36,7 +43,10 @@ public class Delivery extends RealmObject {
     }
 
     public void setEmailList(List<Email> emailList) {
-        this.emailList = new RealmList(emailList);
+        this.emailList = new RealmList<>();
+        for(Email e: emailList){
+            this.emailList.add(e);
+        }
     }
 
     public void setTag(String tag) {
