@@ -11,16 +11,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.FlagTerm;
 
-public class TonlineReceiver extends Receiver{
+public class PopReceiver extends Receiver{
 
 
-    public TonlineReceiver(AppCompatActivity activity){
+    public PopReceiver(AppCompatActivity activity){
         super(activity);
 
 //        userDataDAO.delete("email");  //TODO testing, remove later
@@ -28,8 +27,9 @@ public class TonlineReceiver extends Receiver{
 
         String email = userDataDAO.load("email");
         String pwd = userDataDAO.load("pwd");
+        String host = userDataDAO.load("server");
 
-        if(pwd == null || email == null){
+        if(pwd == null || email == null || host == null){
             createAccount();
         }
         else {
@@ -40,17 +40,18 @@ public class TonlineReceiver extends Receiver{
     public void createAccount(){
         System.out.println("creating account");
 
-        activity.setContentView(R.layout.tonline_login);
+        activity.setContentView(R.layout.pop_login);
 
         activity.findViewById(R.id.b_login).setOnClickListener((View v) -> {
 
             TextView emailView =  activity.findViewById(R.id.email);
             String user = String.valueOf(emailView.getText());
-//                        String password = "EmailPWD";   //this is not the email password, it has to be created manually
-            String password = String.valueOf(((TextView)(activity.findViewById(R.id.password))).getText());
+    String password = String.valueOf(((TextView)(activity.findViewById(R.id.password))).getText());
+            String host = String.valueOf(((TextView)(activity.findViewById(R.id.server))).getText());
 
             userDataDAO.storeKeyValuePair("email", user);
             userDataDAO.storeKeyValuePair("pwd", password);
+            userDataDAO.storeKeyValuePair("server", host);
 
             startReceiving();
         });
@@ -67,8 +68,7 @@ public class TonlineReceiver extends Receiver{
                     String user = userDataDAO.load("email");
                     String password = userDataDAO.load("pwd");
 
-                    String host = "secureimap.t-online.de";
-                    String mailStoreType = "imap";
+                    String host = userDataDAO.load("server");
 
                     // create properties
                     Properties properties = new Properties();
@@ -78,7 +78,8 @@ public class TonlineReceiver extends Receiver{
                     properties.put("mail.pop3.host", host);
                     properties.put("mail.pop3.port", "995");
                     properties.put("mail.pop3.starttls.enable", "true");
-                    properties.put("mail.store.protocol", "pop3");
+//                    properties.put("mail.store.protocol", "pop3");
+
 
                     Session emailSession = Session.getDefaultInstance(properties);
 
