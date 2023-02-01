@@ -1,7 +1,6 @@
 package com.example.th_android2022;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 import android.content.Context;
 

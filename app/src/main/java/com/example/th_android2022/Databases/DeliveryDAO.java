@@ -27,13 +27,15 @@ public class DeliveryDAO {
     public void insertOnlySingleDelivery(Delivery delivery){
         //TODO User notification
 
+        Delivery mutableCopy = new Delivery(delivery);
+
         Number maxId = realm.where(Delivery.class).max("id");
         int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
-        delivery.setId(nextId);
+        mutableCopy.setId(nextId);
 
-        System.out.println("inserting delivery " + delivery.getId());
+        System.out.println("inserting delivery " + mutableCopy.getId());
         realm.executeTransaction(transactionRealm ->
-                transactionRealm.insert(delivery)
+                transactionRealm.insert(mutableCopy)
         );
     }
 

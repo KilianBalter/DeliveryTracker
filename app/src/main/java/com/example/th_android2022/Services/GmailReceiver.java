@@ -58,7 +58,7 @@ public class GmailReceiver {
         AsyncTask.execute(runnable);
     }
 
-    public void listMails(View view) {
+    public void listMails(View view) { //TODO store in Database
         Runnable runnable = () -> {
             try {
                 ListMessagesResponse response = service.users().messages().list("me").execute();
