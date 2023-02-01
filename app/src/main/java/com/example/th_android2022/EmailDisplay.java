@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.th_android2022.Databases.DeliveryDAO;
 import com.example.th_android2022.Entities.Delivery;
+import com.example.th_android2022.Entities.Email;
 
 import java.util.List;
 
@@ -37,12 +38,23 @@ public class EmailDisplay {
         layout.removeAllViews();
 
         for(Delivery delivery: deliveries){
-            TextView text = new TextView(activity);
-            text.setText(delivery.getTag() + "\n" +
+            TextView textView = new TextView(activity);
+            textView.setText(delivery.getTag() + "\n" +
                     "Order: " + delivery.getOrderId() + "\n" +
                     "Status: " + delivery.getStatus());
-            layout.addView(text);
 
+            textView.setOnClickListener(View -> {
+                layout.removeAllViews();
+                TextView emails = new TextView(activity);
+                String  text = "";
+                for(Email e: delivery.getEmailList()){
+                    text += e.getContent() + "\n#############################################\n\n";
+                }
+                emails.setText(text);
+                layout.addView(emails);
+            });
+
+            layout.addView(textView);
         }
         layout.invalidate();
     }
