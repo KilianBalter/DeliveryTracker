@@ -36,12 +36,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/reload"
-            android:layout_width="197dp"
+        <ImageButton
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="reload" />
+            android:contentDescription="back"
+            app:srcCompat="@android:drawable/ic_menu_revert" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="reload"
+            app:srcCompat="@android:drawable/ic_popup_sync" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

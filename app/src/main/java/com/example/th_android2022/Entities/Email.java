@@ -3,7 +3,6 @@ package com.example.th_android2022.Entities;
 
 import java.util.Date;
 
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 public class Email extends RealmObject {

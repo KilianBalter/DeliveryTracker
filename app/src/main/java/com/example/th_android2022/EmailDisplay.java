@@ -1,7 +1,6 @@
 package com.example.th_android2022;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,15 +14,17 @@ import java.util.List;
 public class EmailDisplay {
 
     Activity activity;
+    View.OnClickListener logout;
 
-    public EmailDisplay(Activity activity) {
+    public EmailDisplay(Activity activity, View.OnClickListener logout) {
         this.activity = activity;
+        this.logout = logout;
     }
 
 
     public void show(){
         activity.setContentView(R.layout.delivery_list);
-
+        activity.findViewById(R.id.logout).setOnClickListener(logout);
         activity.findViewById(R.id.reload).setOnClickListener((View v) -> reload());
     }
 
@@ -52,6 +53,11 @@ public class EmailDisplay {
                 }
                 emails.setText(text);
                 layout.addView(emails);
+
+                activity.findViewById(R.id.logout).setOnClickListener(v -> {
+                    show();
+                    reload();
+                });
             });
 
             layout.addView(textView);
