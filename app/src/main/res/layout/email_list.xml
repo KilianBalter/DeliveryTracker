@@ -38,12 +38,11 @@
 
         <ImageButton
             android:id="@+id/back"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="26dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:contentDescription="back"
-            app:srcCompat="@mipmap/logout_foreground"
-            tools:srcCompat="@mipmap/logout_foreground" />
+            app:srcCompat="@android:drawable/ic_menu_revert" />
 
         <Space
             android:layout_width="wrap_content"
@@ -60,13 +59,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <ImageButton
-            android:id="@+id/reload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="reload"
-            app:srcCompat="@android:drawable/ic_popup_sync" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

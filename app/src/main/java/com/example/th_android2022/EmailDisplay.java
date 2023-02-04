@@ -24,7 +24,7 @@ public class EmailDisplay {
 
     public void show(){
         activity.setContentView(R.layout.delivery_list);
-        activity.findViewById(R.id.logout).setOnClickListener(logout);
+        activity.findViewById(R.id.back).setOnClickListener(logout);
         activity.findViewById(R.id.reload).setOnClickListener((View v) -> reload());
     }
 
@@ -45,16 +45,19 @@ public class EmailDisplay {
                     "Status: " + delivery.getStatus());
 
             textView.setOnClickListener(View -> {
-                layout.removeAllViews();
+
+                activity.setContentView(R.layout.email_list);
+                LinearLayout layoutEmails = (LinearLayout) activity.findViewById(R.id.scrollLayout);
+
                 TextView emails = new TextView(activity);
                 String  text = "";
                 for(Email e: delivery.getEmailList()){
                     text += e.getContent() + "\n#############################################\n\n";
                 }
                 emails.setText(text);
-                layout.addView(emails);
+                layoutEmails.addView(emails);
 
-                activity.findViewById(R.id.logout).setOnClickListener(v -> {
+                activity.findViewById(R.id.back).setOnClickListener(v -> {
                     show();
                     reload();
                 });
