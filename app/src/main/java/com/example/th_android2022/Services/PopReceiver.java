@@ -69,7 +69,12 @@ public class PopReceiver extends BroadcastReceiver {
 
                     String content;
                     if (message.getContent() instanceof MimeMultipart) {
-                        content = ((MimeMultipart) message.getContent()).getBodyPart(0).getContent().toString();
+                        if (((MimeMultipart) message.getContent()).getBodyPart(0).getContent() instanceof MimeMultipart) {
+                            content = ((MimeMultipart) ((MimeMultipart) message.getContent()).getBodyPart(0).getContent()).getBodyPart(0).getContent().toString();
+                        }
+                        else {
+                            content = ((MimeMultipart) message.getContent()).getBodyPart(0).getContent().toString();
+                        }
                     } else {
                         content = message.getContent().toString();
                     }
