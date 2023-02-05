@@ -99,7 +99,7 @@ public class PopCreator {
         Calendar calendar = Calendar.getInstance();
 
         alarmMgr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                1000*3, alarmIntent);
+                1, alarmIntent);            //intervals are determined by the phone
 
         System.out.println("background started");
         display.show();

@@ -77,4 +77,10 @@ dependencies {
 
     implementation 'com.sun.mail:android-mail:1.6.2'
     implementation 'com.sun.mail:android-activation:1.6.2'
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.11.3'
+
+
+    implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
 }

@@ -72,6 +72,15 @@ public class DeliveryDAO {
         return result;
     }
 
+    public Delivery findFirstById(long id){
+        Delivery result = realm.where(Delivery.class).
+                equalTo("id", id).
+                findFirst();
+        if (result != null)
+            result = new Delivery(result);
+        return result;
+    }
+
     public void updateOnlySingleDelivery(Delivery delivery){
         realm.executeTransaction(transactionRealm -> {
             Delivery storedDelivery = realm.where(Delivery.class).
@@ -126,7 +135,7 @@ public class DeliveryDAO {
     }
 
 
-    private void notify(String title, String msg){
+    private void notify(String title, String msg){          //TODO set oncklick action to open app
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "3")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)

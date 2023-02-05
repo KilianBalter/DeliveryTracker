@@ -1,0 +1,119 @@
+package com.example.th_android2022.Filter;
+
+import com.example.th_android2022.Entities.Email;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class LinkFilter {
+
+    /**
+     * Returns a list with all links contained in the input
+     */
+    public static List<String> extractUrls(String text)
+    {
+        List<String> containedUrls = new ArrayList<>();
+        String urlRegex = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        Pattern pattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(text);
+
+        while (urlMatcher.find())
+        {
+            containedUrls.add(text.substring(urlMatcher.start(0),
+                    urlMatcher.end(0)));
+        }
+
+        return containedUrls;
+    }
+
+    boolean checkForTrackingLink(String link){
+        Pattern pattern = Pattern.compile(
+                ".*www\\.amazon\\..*ship-track?.*|" +
+                        ".*www\\.amazon\\..*shiptrack.*|" +
+                        ".*www\\.dhl\\..*|" +
+                        ".*nolp\\.dhl\\..*|" +
+                        ".*mailing4\\.dhl\\..*|" +
+                        ".*www\\.ups\\..*|" +
+                        ".*www\\.dpd\\..*|" +
+                        ".*tracking\\.dpd\\..*|" +
+                        ".*www\\.myhermes\\..*|" +
+                        ".*parcel-api\\.delivery.*", Pattern.CASE_INSENSITIVE);
+
+        Matcher urlMatcher = pattern.matcher(link);
+
+        return urlMatcher.find();
+    }
+
+    boolean checkForPasswordProtection(String document){
+        Pattern pattern = Pattern.compile(
+                "password|" +
+                        "login|" +
+                        "register", Pattern.CASE_INSENSITIVE);
+
+        Matcher urlMatcher = pattern.matcher(document);
+
+        return urlMatcher.find();
+    }
+
+    public double filter(Email email){
+        String content = email.getContent();
+//        System.out.println("\n\nfiltering email: " + content + "\n\n");
+        double isTrackingEmail = 0.0;
+
+        List<String> links = extractUrls(content);
+
+        for (String link: links) {
+            System.out.println("checking link: " + link);
+
+            if(checkForTrackingLink(link)){
+                System.out.println("email contains trackin link");
+                isTrackingEmail = Math.max(isTrackingEmail, 1.0);
+                email.setTrackingLink(link);
+            }
+            else {
+                try {
+                    Connection conn = Jsoup.connect(link).userAgent("Opera");
+
+                    Document doc = conn.get();
+
+                    if (checkForTrackingLink(conn.followRedirects(true).execute().url().toString())) {
+                        System.out.println("email contains indirect trackin link");
+                        isTrackingEmail = Math.max(isTrackingEmail, 1.0);
+                        email.setTrackingLink(link);
+                    }
+//                else if (checkForPasswordProtection(doc.toString())){
+//                    System.out.println("email link is password protected");
+//                    isTrackingEmail = Math.max(isTrackingEmail, 0.5);
+//                }
+                    else {
+                        Elements result = doc.select("a[href]");
+                        List<String> linksOnWebsite = extractUrls(result.toString());
+                        for (String redirectLink : linksOnWebsite) {
+                            if (checkForTrackingLink(redirectLink)) {
+                                isTrackingEmail = Math.max(isTrackingEmail, 1.0);
+                                System.out.println("email contains link wich redirects to website with tracking link");
+                                email.setTrackingLink(link);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(isTrackingEmail == 1.0){
+                return isTrackingEmail;
+            }
+
+        }
+
+        return isTrackingEmail;
+    }
+}

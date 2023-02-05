@@ -4,6 +4,7 @@ import com.example.th_android2022.Databases.DeliveryDAO;
 import com.example.th_android2022.Databases.UserDataDAO;
 import com.example.th_android2022.Entities.Delivery;
 import com.example.th_android2022.Entities.Email;
+import com.example.th_android2022.Filter.Filter;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,7 +28,6 @@ public class PopReceiver extends BroadcastReceiver {
         new Thread(() -> {
             try {
 
-                DeliveryDAO deliveryDAO = new DeliveryDAO(context);
                 UserDataDAO userDataDAO = new UserDataDAO(context, PopCreator.class.getSimpleName());
 
 
@@ -62,7 +62,9 @@ public class PopReceiver extends BroadcastReceiver {
                 // retrieve the messages from the folder in an array and print it
                 Message[] messages = inbox.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
                 System.out.println("messages.length---" + messages.length);
-
+                if(emailIndex == 0){
+                    emailIndex = messages.length - 30;
+                }
                 for (int i = emailIndex, n = messages.length; i < n; i++) {
                     Message message = messages[i];
                     message.setFlag(Flags.Flag.SEEN, true);
@@ -78,12 +80,9 @@ public class PopReceiver extends BroadcastReceiver {
                     } else {
                         content = message.getContent().toString();
                     }
-                    Email emailObject = new Email(message.getSubject(), message.getFrom()[0].toString(), content, message.getSentDate());
-                    List<Email> emails = new LinkedList<>();
-                    emails.add(emailObject);
-                    Delivery delivery = new Delivery();
-                    delivery.setEmailList(emails);
-                    deliveryDAO.insertOnlySingleDelivery(delivery);
+                    Email emailObject = new Email(message.getSubject(), message.getFrom()[0].toString(), content, message.getSentDate(), null);
+
+                    Filter.filter(emailObject, context);
 
                     userDataDAO.storeKeyValuePair("emailIndex", String.valueOf(message.getMessageNumber()));
                 }

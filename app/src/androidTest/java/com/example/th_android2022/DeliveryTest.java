@@ -54,7 +54,7 @@ public class DeliveryTest {
         long deliveriesSize = allDeliveries.size();
         Delivery result = repo.findFirstByOrderIdAndDeliveryService("1234", "dhl");
 
-        Email e = new Email("delivery", "amazon", "balblub", new Date(2000, 1, 1));
+        Email e = new Email("delivery", "amazon", "balblub", new Date(2000, 1, 1), null);
 
         List<Email> emails = new LinkedList<>(result.getEmailList());
         emails.add(e);
