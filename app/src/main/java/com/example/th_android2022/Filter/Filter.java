@@ -11,22 +11,26 @@ import java.util.List;
 
 public class Filter {
 
-    public static void filter(Email email, Context context){
+    /**
+     * filters tracking email and sends them to DeliveryWrapper
+     *
+     * @param email   to be filtered
+     * @param context of application
+     */
+    public static void filter(Email email, Context context) {
         LinkFilter linkFilter = new LinkFilter();
         double trackingEmail;
 
         trackingEmail = linkFilter.filter(email);
-//        if(trackingEmail == 1.0)
-//            AiFilter.train(email, true);
 
-//        if(trackingEmail != 1.0){                 //uncomment as soon as enough user data is collected
-//            trackingEmail = AiFilter.filter(email);
-//        }
+        if (trackingEmail == 1.0)
+            AiFilter.train(email, true);
+        else {
+            trackingEmail = AiFilter.filter(email);
+        }
 
 
-        System.out.println(email.getSubject() + " is " + trackingEmail + "#####################################################");
-
-        if(trackingEmail > 0.7){
+        if (trackingEmail > 0.7) {
             //TODO PACkagewrapper
 
 
@@ -37,8 +41,7 @@ public class Filter {
             new DeliveryDAO(context).insertOnlySingleDelivery(delivery);
 
 
-        }
-        else if(trackingEmail > 0.3){
+        } else if (trackingEmail > 0.3) {
             //TODO ask user
         }
     }

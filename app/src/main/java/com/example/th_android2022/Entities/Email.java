@@ -10,12 +10,10 @@ public class Email extends RealmObject {
     String sender;
     String content;
     Date date;
-
     String trackingLink;
 
 
-    public Email(){     //idk
-
+    public Email() {     //do not delete! Used for Realm Database
     }
 
     public Email(String subject, String sender, String content, Date date, String trackingLink) {
@@ -23,10 +21,6 @@ public class Email extends RealmObject {
         this.sender = sender;
         this.content = content;
         this.date = date;
-        this.trackingLink = trackingLink;
-    }
-
-    public void setTrackingLink(String trackingLink) {
         this.trackingLink = trackingLink;
     }
 
@@ -56,5 +50,9 @@ public class Email extends RealmObject {
 
     public String getTrackingLink() {
         return trackingLink;
+    }
+
+    public void setTrackingLink(String trackingLink) {
+        this.trackingLink = trackingLink;
     }
 }
