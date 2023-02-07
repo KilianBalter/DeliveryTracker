@@ -7,14 +7,13 @@ import android.content.Intent;
 import com.example.th_android2022.Databases.UserDataDAO;
 import com.example.th_android2022.Entities.Email;
 import com.example.th_android2022.Filter.Filter;
+import com.example.th_android2022.MainActivity;
 
 import java.util.Properties;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeMultipart;
@@ -87,13 +86,11 @@ public class PopReceiver extends BroadcastReceiver {
                 inbox.close(false);
                 store.close();
 
-            } catch (NoSuchProviderException e) {
-                e.printStackTrace();
-            } catch (MessagingException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
+                MainActivity.showToast("DeliveryTracker failed to fetch emails");
             }
+
         }).start();
     }
 

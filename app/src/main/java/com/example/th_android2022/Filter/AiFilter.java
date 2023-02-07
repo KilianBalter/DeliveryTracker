@@ -129,6 +129,7 @@ public class AiFilter {
         String context = text.substring(linkPosition - 40, linkPosition);
         String data = email.getSubject() + " " + context;
         data = data.replaceAll("[^a-zA-Z]", "");
+        System.out.println("link: " + link + "\n context: " + data);
         return data;
     }
 

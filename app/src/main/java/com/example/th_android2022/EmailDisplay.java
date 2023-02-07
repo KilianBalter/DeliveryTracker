@@ -57,6 +57,8 @@ public class EmailDisplay {
         layout.removeAllViews();
 
         for (Delivery delivery : deliveries) {
+            //TODO filter delivery by status
+
             //create new row
             ConstraintLayout row = new ConstraintLayout(activity);
             row.setId(View.generateViewId());
@@ -64,9 +66,7 @@ public class EmailDisplay {
 
             //create textView
             TextView textView = new TextView(activity);
-            String text = "";
-            if (delivery.getTag() != null)
-                text += delivery.getTag() + "\n";
+            String text = delivery.getTag() + "\n";
             if (delivery.getOrderId() != null)
                 text += "Order: " + delivery.getOrderId() + "\n";
             if (delivery.getStatus() != null)
@@ -78,6 +78,7 @@ public class EmailDisplay {
 
             //create stopButton
             ImageButton stopButton = new ImageButton(activity);
+            row.addView(stopButton);
             stopButton.setOnClickListener(new HideDeliveryListener(delivery, layout, row, false));
             stopButton.setId(View.generateViewId());
             stopButton.setImageResource(R.drawable.redstop);
@@ -86,10 +87,11 @@ public class EmailDisplay {
             android.view.ViewGroup.LayoutParams params = stopButton.getLayoutParams();
             params.height = 175;
             stopButton.setLayoutParams(params);
-            row.addView(stopButton);
+
 
             //create deliveredButton
             ImageButton deliveredButton = new ImageButton(activity);
+            row.addView(deliveredButton);
             deliveredButton.setOnClickListener(new HideDeliveryListener(delivery, layout, row, true));
             deliveredButton.setId(View.generateViewId());
             deliveredButton.setImageResource(R.drawable.greendelivered);
@@ -98,14 +100,14 @@ public class EmailDisplay {
             android.view.ViewGroup.LayoutParams paramsDelivered = deliveredButton.getLayoutParams();
             paramsDelivered.height = 175;
             deliveredButton.setLayoutParams(paramsDelivered);
-            row.addView(deliveredButton);
+
 
             //place all elements in row
             ConstraintSet rowSet = new ConstraintSet();
             rowSet.clone(row);
             rowSet.connect(textView.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT, 10);
-            rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 0);
-            rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, stopButton.getId(), ConstraintSet.LEFT, 0);
+            rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 0);
+            rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, deliveredButton.getId(), ConstraintSet.LEFT, 0);
             rowSet.applyTo(row);
         }
         layout.invalidate();
