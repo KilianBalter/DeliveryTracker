@@ -39,6 +39,7 @@ public class AiFilter {
 //                HttpURLConnection http = (HttpURLConnection) con;
 //                http.setRequestMethod("POST"); // PUT is another valid option
 //                http.setDoOutput(true);
+//                http.setConnectTimeout(2000);
 //                byte[] out = ("_," + getLinkContext(email, link)).getBytes(StandardCharsets.UTF_8);
 //                System.out.println("evaluating  " + "_," + getLinkContext(email, email.getTrackingLink()));
 //                int length = out.length;
@@ -94,6 +95,7 @@ public class AiFilter {
             HttpURLConnection http = (HttpURLConnection) con;
             http.setRequestMethod("POST"); // PUT is another valid option
             http.setDoOutput(true);
+            http.setConnectTimeout(2000);
             byte[] out = (isTrackingEmail + "," + getLinkContext(email, email.getTrackingLink())).getBytes(StandardCharsets.UTF_8);
             System.out.println("trainig ai with " + isTrackingEmail + "," + getLinkContext(email, email.getTrackingLink()));
             int length = out.length;
