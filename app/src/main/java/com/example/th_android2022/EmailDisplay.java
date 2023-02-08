@@ -1,7 +1,10 @@
 package com.example.th_android2022;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +30,7 @@ public class EmailDisplay {
      * logout will be the action if the user logs out
      *
      * @param activity application activity
-     * @param logout   onCklicklistener to logout the user
+     * @param logout   onClickListener to logout the user
      */
     public EmailDisplay(Activity activity, View.OnClickListener logout) {
         this.activity = activity;
@@ -130,7 +133,18 @@ public class EmailDisplay {
             TextView emails = new TextView(activity);
             String email = "";
             for (Email e : d.getEmailList()) {
-                //TODO button to open tracking link in browser intent, if tracking link present
+                //If tracking link is present, add Button to TextView that opens tracking link in browser intent
+                if(e.getTrackingLink() != null) {
+                    Button openLink = new Button(activity);
+                    openLink.setOnClickListener(l -> {
+                        Uri webpage = Uri.parse(e.getTrackingLink());
+                        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                        activity.startActivity(webIntent);
+                    });
+                    openLink.setText("Open Tracking Link");
+                    openLink.setBackgroundColor(0xFF15A4C8);
+                    layoutEmails.addView(openLink);
+                }
                 email += e.getContent() + "\n#############################################\n\n";
             }
             emails.setText(email);
