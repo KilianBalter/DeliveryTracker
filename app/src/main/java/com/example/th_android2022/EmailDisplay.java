@@ -39,7 +39,10 @@ public class EmailDisplay {
      */
     public void show() {
         activity.setContentView(R.layout.delivery_list);
-        activity.findViewById(R.id.back).setOnClickListener(logout);
+        activity.findViewById(R.id.back).setOnClickListener(new ConfirmListener(activity, "Delete your account?", logout, (c) -> {
+            show();
+            reload();
+        }));
         activity.findViewById(R.id.reload).setOnClickListener((View v) -> reload());
     }
 
@@ -79,7 +82,12 @@ public class EmailDisplay {
             //create stopButton
             ImageButton stopButton = new ImageButton(activity);
             row.addView(stopButton);
-            stopButton.setOnClickListener(new HideDeliveryListener(delivery, layout, row, false));
+            View.OnClickListener hideDelivery = new HideDeliveryListener(delivery, layout, row, false);
+            View.OnClickListener deliveredListener = new ConfirmListener(activity, "Hide this because it was not a delivery?", hideDelivery, (c) -> {
+                show();
+                reload();
+            });
+            stopButton.setOnClickListener(deliveredListener);
             stopButton.setId(View.generateViewId());
             stopButton.setImageResource(R.drawable.redstop);
             stopButton.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -92,7 +100,12 @@ public class EmailDisplay {
             //create deliveredButton
             ImageButton deliveredButton = new ImageButton(activity);
             row.addView(deliveredButton);
-            deliveredButton.setOnClickListener(new HideDeliveryListener(delivery, layout, row, true));
+            hideDelivery = new HideDeliveryListener(delivery, layout, row, true);
+            deliveredListener = new ConfirmListener(activity, "Has the Package been delivered?", hideDelivery, (c) -> {
+                show();
+                reload();
+            });
+            deliveredButton.setOnClickListener(deliveredListener);
             deliveredButton.setId(View.generateViewId());
             deliveredButton.setImageResource(R.drawable.greendelivered);
             deliveredButton.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -161,14 +174,17 @@ public class EmailDisplay {
 
         @Override
         public void onClick(View view) {
-            new Thread(() -> {
-                DeliveryDAO dao = new DeliveryDAO(activity);
-                for (Email email : dao.findFirstById(delivery.getId()).getEmailList())
-                    AiFilter.train(email, isTrackingEmail);
-                dao.deleteById(delivery.getId());
-            }).start();
 
-            layout.removeView(row);
+
+            DeliveryDAO dao = new DeliveryDAO(activity);
+            dao.deleteById(delivery.getId());               //TODO: set status instead of deleting
+            show();
+            reload();
+
+            new Thread(() -> {
+                for (Email email : delivery.getEmailList())
+                    AiFilter.train(email, isTrackingEmail);
+            }).start();
         }
     }
 
