@@ -18,6 +18,11 @@ public class ConfirmListener implements View.OnClickListener {
         this.no = no;
     }
 
+    /**
+     * shows the confirm screen on the ui and sets onClickListener of yes and no button
+     *
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         activity.setContentView(R.layout.confirm_layout);
