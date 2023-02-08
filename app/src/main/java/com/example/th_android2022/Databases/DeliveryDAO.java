@@ -35,6 +35,7 @@ public class DeliveryDAO {
         RealmConfiguration config = new RealmConfiguration
                 .Builder()
                 .deleteRealmIfMigrationNeeded()
+                .allowWritesOnUiThread(true)
                 .build();
         Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
