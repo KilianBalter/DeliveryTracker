@@ -66,6 +66,7 @@ public class EmailDisplay {
             ConstraintLayout row = new ConstraintLayout(activity);
             row.setId(View.generateViewId());
             layout.addView(row);
+//            row.setBackgroundResource(R.drawable.layout_bg);
 
             //create textView
             TextView textView = new TextView(activity);
@@ -77,6 +78,7 @@ public class EmailDisplay {
             textView.setText(text);
             textView.setOnClickListener(new EmailListLoader(delivery));
             textView.setId(View.generateViewId());
+            textView.setTextSize(16);
             row.addView(textView);
 
             //create stopButton
@@ -89,12 +91,13 @@ public class EmailDisplay {
             });
             stopButton.setOnClickListener(deliveredListener);
             stopButton.setId(View.generateViewId());
-            stopButton.setImageResource(R.drawable.redstop);
+            stopButton.setImageResource(R.mipmap.red_foreground);
             stopButton.setScaleType(ImageView.ScaleType.FIT_XY);
             stopButton.setAdjustViewBounds(true);
             android.view.ViewGroup.LayoutParams params = stopButton.getLayoutParams();
             params.height = 175;
             stopButton.setLayoutParams(params);
+            stopButton.setBackgroundResource(R.drawable.layout_bg);
 
 
             //create deliveredButton
@@ -107,12 +110,13 @@ public class EmailDisplay {
             });
             deliveredButton.setOnClickListener(deliveredListener);
             deliveredButton.setId(View.generateViewId());
-            deliveredButton.setImageResource(R.drawable.greendelivered);
+            deliveredButton.setImageResource(R.mipmap.green_foreground);
             deliveredButton.setScaleType(ImageView.ScaleType.FIT_XY);
             deliveredButton.setAdjustViewBounds(true);
             android.view.ViewGroup.LayoutParams paramsDelivered = deliveredButton.getLayoutParams();
             paramsDelivered.height = 175;
             deliveredButton.setLayoutParams(paramsDelivered);
+            deliveredButton.setBackgroundResource(R.drawable.layout_bg);
 
 
             //place all elements in row
