@@ -17,6 +17,7 @@ import com.example.th_android2022.Databases.DeliveryDAO;
 import com.example.th_android2022.Entities.Delivery;
 import com.example.th_android2022.Entities.Email;
 import com.example.th_android2022.Filter.AiFilter;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class EmailDisplay {
 
         layout.removeAllViews();
 
-        for (Delivery delivery : deliveries) {
+        for (Delivery delivery : Lists.reverse(deliveries)) {
             //TODO filter delivery by status
 
             //create new row
