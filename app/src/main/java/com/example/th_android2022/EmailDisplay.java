@@ -1,7 +1,11 @@
 package com.example.th_android2022;
 
 import android.app.Activity;
+import android.content.res.Resources;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,7 +70,16 @@ public class EmailDisplay {
             ConstraintLayout row = new ConstraintLayout(activity);
             row.setId(View.generateViewId());
             layout.addView(row);
-//            row.setBackgroundResource(R.drawable.layout_bg);
+            //row.setBackgroundResource(R.drawable.layout_bg);
+
+            //Add divider
+            int oneDP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Resources.getSystem().getDisplayMetrics());
+            View divider = new View(activity);
+            LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2*oneDP);
+            dividerParams.setMargins(0,3*oneDP,0,3*oneDP);
+            divider.setLayoutParams(dividerParams);
+            divider.setBackgroundColor(activity.getResources().getColor(R.color.blue_app));
+            layout.addView(divider);
 
             //create textView
             TextView textView = new TextView(activity);
