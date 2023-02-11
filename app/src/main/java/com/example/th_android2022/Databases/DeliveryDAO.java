@@ -2,13 +2,17 @@ package com.example.th_android2022.Databases;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.th_android2022.Entities.Delivery;
+import com.example.th_android2022.MainActivity;
 import com.example.th_android2022.R;
 
 import java.util.List;
@@ -175,19 +179,24 @@ public class DeliveryDAO {
     }
 
 
-    private void notify(String title, String msg) {          //TODO set oncklick action to open app
+    private void notify(String title, String msg) {
+        // "onClick" action of notification
+        Intent resultIntent = new Intent(context, MainActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        PendingIntent resultPendingIntent =
+            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "3")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(msg)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(resultPendingIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
         // notificationId is always the same so user doesnt get to many notifications
         notificationManager.notify(1, builder.build());
-
     }
 }
