@@ -3,6 +3,7 @@ package com.example.th_android2022;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -66,6 +67,10 @@ public class EmailDisplay {
         for (Delivery delivery : Lists.reverse(deliveries)) {
             //TODO filter delivery by status
 
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+
             //create new row
             ConstraintLayout row = new ConstraintLayout(activity);
             row.setId(View.generateViewId());
@@ -97,7 +102,7 @@ public class EmailDisplay {
             stopButton.setScaleType(ImageView.ScaleType.FIT_XY);
             stopButton.setAdjustViewBounds(true);
             android.view.ViewGroup.LayoutParams params = stopButton.getLayoutParams();
-            params.height = 175;
+            params.height = height / 13;
             stopButton.setLayoutParams(params);
 
 
@@ -115,7 +120,7 @@ public class EmailDisplay {
             deliveredButton.setScaleType(ImageView.ScaleType.FIT_XY);
             deliveredButton.setAdjustViewBounds(true);
             android.view.ViewGroup.LayoutParams paramsDelivered = deliveredButton.getLayoutParams();
-            paramsDelivered.height = 175;
+            paramsDelivered.height = height / 13;
             deliveredButton.setLayoutParams(paramsDelivered);
 
 
