@@ -64,7 +64,6 @@ public class LinkFilter {
 
     public double filter(Email email){
         String content = email.getContent();
-//        System.out.println("\n\nfiltering email: " + content + "\n\n");
         double isTrackingEmail = 0.0;
 
         List<String> links = extractUrls(content);
@@ -83,10 +82,11 @@ public class LinkFilter {
 
                     Document doc = conn.get();
 
-                    if (checkForTrackingLink(conn.followRedirects(true).execute().url().toString())) {
+                    String redirectedLink = conn.followRedirects(true).execute().url().toString();
+                    if (checkForTrackingLink(redirectedLink)) {
                         System.out.println("email contains indirect trackin link");
                         isTrackingEmail = Math.max(isTrackingEmail, 1.0);
-                        email.setTrackingLink(link);
+                        email.setTrackingLink(redirectedLink);
                     }
 //                else if (checkForPasswordProtection(doc.toString())){
 //                    System.out.println("email link is password protected");
@@ -95,11 +95,11 @@ public class LinkFilter {
                     else {
                         Elements result = doc.select("a[href]");
                         List<String> linksOnWebsite = extractUrls(result.toString());
-                        for (String redirectLink : linksOnWebsite) {
-                            if (checkForTrackingLink(redirectLink)) {
+                        for (String websiteLink : linksOnWebsite) {
+                            if (checkForTrackingLink(websiteLink)) {
                                 isTrackingEmail = Math.max(isTrackingEmail, 1.0);
-                                System.out.println("email contains link wich redirects to website with tracking link");
-                                email.setTrackingLink(link);
+                                System.out.println("email contains link which redirects to website with tracking link");
+                                email.setTrackingLink(websiteLink);
                             }
                         }
                     }

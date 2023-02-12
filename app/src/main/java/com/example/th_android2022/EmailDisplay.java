@@ -68,88 +68,96 @@ public class EmailDisplay {
 
         layout.removeAllViews();
 
-        for (Delivery delivery : Lists.reverse(deliveries)) {
-            //TODO filter delivery by status
-
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            int height = displayMetrics.heightPixels;
-
-            //create new row
-            ConstraintLayout row = new ConstraintLayout(activity);
-            row.setId(View.generateViewId());
-            layout.addView(row);
-            //row.setBackgroundResource(R.drawable.layout_bg);
-
-            //Add divider
-            int oneDP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Resources.getSystem().getDisplayMetrics());
-            View divider = new View(activity);
-            LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2*oneDP);
-            dividerParams.setMargins(0,3*oneDP,0,3*oneDP);
-            divider.setLayoutParams(dividerParams);
-            divider.setBackgroundColor(activity.getResources().getColor(R.color.blue_app));
-            layout.addView(divider);
-
-            //create textView
+        if (deliveries.size() == 0) {
             TextView textView = new TextView(activity);
-            String text = delivery.getTag() + "\n";
-            if (delivery.getOrderId() != null)
-                text += "Order: " + delivery.getOrderId() + "\n";
-            if (delivery.getStatus() != null)
-                text += "Status: " + delivery.getStatus();
+            String text = "scanning emails ...";
             textView.setText(text);
-            textView.setOnClickListener(new EmailListLoader(delivery));
-            textView.setId(View.generateViewId());
             textView.setTextSize(16);
-            row.addView(textView);
+            layout.addView(textView);
+        } else {
+            for (Delivery delivery : Lists.reverse(deliveries)) {
+                //TODO filter delivery by status
 
-            //create stopButton
-            ImageButton stopButton = new ImageButton(activity);
-            row.addView(stopButton);
-            View.OnClickListener hideDelivery = new HideDeliveryListener(delivery, layout, row, false);
-            View.OnClickListener deliveredListener = new ConfirmListener(activity, "Hide this because it was not a delivery?", hideDelivery, (c) -> {
-                show();
-                reload();
-            });
-            stopButton.setOnClickListener(deliveredListener);
-            stopButton.setId(View.generateViewId());
-            stopButton.setImageResource(R.mipmap.red_foreground);
-            stopButton.setScaleType(ImageView.ScaleType.FIT_XY);
-            stopButton.setAdjustViewBounds(true);
-            android.view.ViewGroup.LayoutParams params = stopButton.getLayoutParams();
-            params.height = height / 13;
-            stopButton.setLayoutParams(params);
-            stopButton.setBackgroundResource(R.drawable.layout_bg);
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+
+                //create new row
+                ConstraintLayout row = new ConstraintLayout(activity);
+                row.setId(View.generateViewId());
+                layout.addView(row);
+                //row.setBackgroundResource(R.drawable.layout_bg);
+
+                //Add divider
+                int oneDP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Resources.getSystem().getDisplayMetrics());
+                View divider = new View(activity);
+                LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2 * oneDP);
+                dividerParams.setMargins(0, 3 * oneDP, 0, 3 * oneDP);
+                divider.setLayoutParams(dividerParams);
+                divider.setBackgroundColor(activity.getResources().getColor(R.color.blue_app));
+                layout.addView(divider);
+
+                //create textView
+                TextView textView = new TextView(activity);
+                String text = delivery.getTag() + "\n";
+                if (delivery.getOrderId() != null)
+                    text += "Order: " + delivery.getOrderId() + "\n";
+                if (delivery.getStatus() != null)
+                    text += "Status: " + delivery.getStatus();
+                textView.setText(text);
+                textView.setOnClickListener(new EmailListLoader(delivery));
+                textView.setId(View.generateViewId());
+                textView.setTextSize(16);
+                row.addView(textView);
+
+                //create stopButton
+                ImageButton stopButton = new ImageButton(activity);
+                row.addView(stopButton);
+                View.OnClickListener hideDelivery = new HideDeliveryListener(delivery, layout, row, false);
+                View.OnClickListener deliveredListener = new ConfirmListener(activity, "Hide this because it was not a delivery?", hideDelivery, (c) -> {
+                    show();
+                    reload();
+                });
+                stopButton.setOnClickListener(deliveredListener);
+                stopButton.setId(View.generateViewId());
+                stopButton.setImageResource(R.mipmap.red_foreground);
+                stopButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                stopButton.setAdjustViewBounds(true);
+                android.view.ViewGroup.LayoutParams params = stopButton.getLayoutParams();
+                params.height = height / 13;
+                stopButton.setLayoutParams(params);
+                stopButton.setBackgroundResource(R.drawable.layout_bg);
 
 
-            //create deliveredButton
-            ImageButton deliveredButton = new ImageButton(activity);
-            row.addView(deliveredButton);
-            hideDelivery = new HideDeliveryListener(delivery, layout, row, true);
-            deliveredListener = new ConfirmListener(activity, "Has the Package been delivered?", hideDelivery, (c) -> {
-                show();
-                reload();
-            });
-            deliveredButton.setOnClickListener(deliveredListener);
-            deliveredButton.setId(View.generateViewId());
-            deliveredButton.setImageResource(R.mipmap.green_foreground);
-            deliveredButton.setScaleType(ImageView.ScaleType.FIT_XY);
-            deliveredButton.setAdjustViewBounds(true);
-            android.view.ViewGroup.LayoutParams paramsDelivered = deliveredButton.getLayoutParams();
-            paramsDelivered.height = height / 13;
-            deliveredButton.setLayoutParams(paramsDelivered);
-            deliveredButton.setBackgroundResource(R.drawable.layout_bg);
+                //create deliveredButton
+                ImageButton deliveredButton = new ImageButton(activity);
+                row.addView(deliveredButton);
+                hideDelivery = new HideDeliveryListener(delivery, layout, row, true);
+                deliveredListener = new ConfirmListener(activity, "Has the Package been delivered?", hideDelivery, (c) -> {
+                    show();
+                    reload();
+                });
+                deliveredButton.setOnClickListener(deliveredListener);
+                deliveredButton.setId(View.generateViewId());
+                deliveredButton.setImageResource(R.mipmap.green_foreground);
+                deliveredButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                deliveredButton.setAdjustViewBounds(true);
+                android.view.ViewGroup.LayoutParams paramsDelivered = deliveredButton.getLayoutParams();
+                paramsDelivered.height = height / 13;
+                deliveredButton.setLayoutParams(paramsDelivered);
+                deliveredButton.setBackgroundResource(R.drawable.layout_bg);
 
 
-            //place all elements in row
-            ConstraintSet rowSet = new ConstraintSet();
-            rowSet.clone(row);
-            rowSet.connect(textView.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT, 10);
-            rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 0);
-            rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, deliveredButton.getId(), ConstraintSet.LEFT, 0);
-            rowSet.applyTo(row);
+                //place all elements in row
+                ConstraintSet rowSet = new ConstraintSet();
+                rowSet.clone(row);
+                rowSet.connect(textView.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT, 10);
+                rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 0);
+                rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, deliveredButton.getId(), ConstraintSet.LEFT, 0);
+                rowSet.applyTo(row);
+            }
+            layout.invalidate();
         }
-        layout.invalidate();
     }
 
 

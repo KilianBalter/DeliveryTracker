@@ -21,7 +21,7 @@
             style="@android:style/Widget.Material.TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Account or Login"
+            android:text="Create Account"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textStyle="bold" />
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="Hint: You can find your POP3 server address on the website of your email provider"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
+                android:textColor="#F44336"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:text="Hint: You probably have to activate POP3 access to your email and generate a new password"
                 android:textAlignment="center"
-                android:textColor="#FFFFFF"
+                android:textColor="#F44336"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
