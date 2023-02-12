@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.th_android2022.Databases.DeliveryDAO;
 import com.example.th_android2022.Entities.Delivery;
+import com.example.th_android2022.Entities.DeliveryWrapper;
 import com.example.th_android2022.Entities.Email;
 
 import java.util.LinkedList;
@@ -19,9 +20,9 @@ public class Filter {
      */
     public static void filter(Email email, Context context) {
         LinkFilter linkFilter = new LinkFilter();
-        double trackingEmail = 0;
+        double trackingEmail;
 
-        if(RegexFilter.filter(email))
+        //if(RegexFilter.filter(email))
             trackingEmail = linkFilter.filter(email);
 
         if (trackingEmail == 1.0)
@@ -32,15 +33,7 @@ public class Filter {
 
 
         if (trackingEmail > 0.7) {
-            //TODO packageWrapper
-
-            List<Email> emails = new LinkedList<>();
-            emails.add(email);
-            Delivery delivery = new Delivery();
-            delivery.setEmailList(emails);
-            new DeliveryDAO(context).insertOnlySingleDelivery(delivery);
-
-
+            DeliveryWrapper.extractData(email, context);
         } else if (trackingEmail > 0.3) {
             //TODO ask user
         }
