@@ -8,6 +8,12 @@ import io.realm.annotations.PrimaryKey;
 
 public class Delivery extends RealmObject {
 
+
+    public enum Status
+    {
+        ACTIVE, DELIVERED, FALSE
+    }
+
     @PrimaryKey
     private long id;
 
@@ -15,7 +21,7 @@ public class Delivery extends RealmObject {
 
     private String tag;
 
-    private String status; //TODO maybe enum
+    private Status status;
 
     private String orderId;
 
@@ -52,7 +58,7 @@ public class Delivery extends RealmObject {
         this.tag = tag;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -76,7 +82,7 @@ public class Delivery extends RealmObject {
         return tag;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
