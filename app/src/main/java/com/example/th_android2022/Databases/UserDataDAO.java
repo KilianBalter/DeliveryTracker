@@ -27,7 +27,7 @@ public class UserDataDAO {
     public String load(String key) {
         SharedPreferences shared = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         String result = shared.getString(key, null);
-        System.out.println("loading Userdata: " + key + ": " + result);
+        System.out.println("loading Userdata: " + key);
         return result;
     }
 
@@ -48,7 +48,7 @@ public class UserDataDAO {
      * @param value to be stored
      */
     public void storeKeyValuePair(String key, String value) {
-        System.out.println("storing userdata: " + key + ": " + value);
+        System.out.println("storing userdata: " + key);
         SharedPreferences shared = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(key, value);

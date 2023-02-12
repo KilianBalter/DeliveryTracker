@@ -105,16 +105,11 @@ public class PopCreator {
      */
     protected void restartReceiving() {
 
-//        PopReceiver.receiveEmails(activity);
-
-
         Intent intent = new Intent(activity, PopReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(activity, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
+        PendingIntent alarmIntent = PendingIntent.
+                getBroadcast(activity, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmMgr = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-
         Calendar calendar = Calendar.getInstance();
-
         alarmMgr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                 1, alarmIntent);            //intervals are determined by the phone
 
