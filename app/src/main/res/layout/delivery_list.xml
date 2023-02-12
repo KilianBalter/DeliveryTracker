@@ -20,25 +20,7 @@
             android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?android:attr/listDivider" />
-        </LinearLayout>
+            android:orientation="vertical"/>
     </ScrollView>
 
     <LinearLayout
