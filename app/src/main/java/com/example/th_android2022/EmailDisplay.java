@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.content.res.Resources;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -64,7 +63,7 @@ public class EmailDisplay {
 
         List<Delivery> deliveries = repo.findAllDelivery();
 
-        LinearLayout layout = (LinearLayout) activity.findViewById(R.id.scrollLayout);
+        LinearLayout layout = (LinearLayout) activity.findViewById(R.id.listContent);
 
         layout.removeAllViews();
 
@@ -172,7 +171,7 @@ public class EmailDisplay {
         @Override
         public void onClick(View view) {
             activity.setContentView(R.layout.email_list);
-            LinearLayout layoutEmails = (LinearLayout) activity.findViewById(R.id.scrollLayout);
+            LinearLayout layoutEmails = (LinearLayout) activity.findViewById(R.id.listContent);
 
             TextView emails = new TextView(activity);
             String email = "";
