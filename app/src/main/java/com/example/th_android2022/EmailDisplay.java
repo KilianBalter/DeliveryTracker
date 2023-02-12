@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
+import android.content.res.Resources;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -75,6 +79,16 @@ public class EmailDisplay {
             ConstraintLayout row = new ConstraintLayout(activity);
             row.setId(View.generateViewId());
             layout.addView(row);
+            //row.setBackgroundResource(R.drawable.layout_bg);
+
+            //Add divider
+            int oneDP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Resources.getSystem().getDisplayMetrics());
+            View divider = new View(activity);
+            LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2*oneDP);
+            dividerParams.setMargins(0,3*oneDP,0,3*oneDP);
+            divider.setLayoutParams(dividerParams);
+            divider.setBackgroundColor(activity.getResources().getColor(R.color.blue_app));
+            layout.addView(divider);
 
             //create textView
             TextView textView = new TextView(activity);
@@ -86,6 +100,7 @@ public class EmailDisplay {
             textView.setText(text);
             textView.setOnClickListener(new EmailListLoader(delivery));
             textView.setId(View.generateViewId());
+            textView.setTextSize(16);
             row.addView(textView);
 
             //create stopButton
@@ -98,12 +113,13 @@ public class EmailDisplay {
             });
             stopButton.setOnClickListener(deliveredListener);
             stopButton.setId(View.generateViewId());
-            stopButton.setImageResource(R.drawable.redstop);
+            stopButton.setImageResource(R.mipmap.red_foreground);
             stopButton.setScaleType(ImageView.ScaleType.FIT_XY);
             stopButton.setAdjustViewBounds(true);
             android.view.ViewGroup.LayoutParams params = stopButton.getLayoutParams();
             params.height = height / 13;
             stopButton.setLayoutParams(params);
+            stopButton.setBackgroundResource(R.drawable.layout_bg);
 
 
             //create deliveredButton
@@ -116,12 +132,13 @@ public class EmailDisplay {
             });
             deliveredButton.setOnClickListener(deliveredListener);
             deliveredButton.setId(View.generateViewId());
-            deliveredButton.setImageResource(R.drawable.greendelivered);
+            deliveredButton.setImageResource(R.mipmap.green_foreground);
             deliveredButton.setScaleType(ImageView.ScaleType.FIT_XY);
             deliveredButton.setAdjustViewBounds(true);
             android.view.ViewGroup.LayoutParams paramsDelivered = deliveredButton.getLayoutParams();
             paramsDelivered.height = height / 13;
             deliveredButton.setLayoutParams(paramsDelivered);
+            deliveredButton.setBackgroundResource(R.drawable.layout_bg);
 
 
             //place all elements in row
