@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class Delivery extends RealmObject {
 
 
-    public enum Status
+    public enum Status                  //TODO Realm kann keine enum speichern, irendeinen wrapper verwenden
     {
         ACTIVE, DELIVERED, FALSE
     }

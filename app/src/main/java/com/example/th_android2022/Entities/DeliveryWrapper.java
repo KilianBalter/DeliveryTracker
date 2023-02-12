@@ -10,10 +10,10 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 public class DeliveryWrapper {
 
-    Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+    Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();       //TODO get context from constructor
     DeliveryDAO DAO = new DeliveryDAO(appContext);
 
-    public void newEmail(Email Email){
+    public void newEmail(Email Email){  //TODO was ist der sinn hiervon?
         extractData(Email);
     }
 
@@ -45,21 +45,21 @@ public class DeliveryWrapper {
         d.setStatus(state);
         d.setOrderId(OrderID);
         d.setDeliveryService(DeliveryService);
-        d.setTag(Tag);
+        d.setTag(Tag);                                          //TODO store in database AFTER setting the fields, not before
     }
 
     public String findOrderID(String content) {
-        String OrderID = "NotFound";
-        int start = content.indexOf("Sendungsnummer:")+1;
+        String OrderID = "NotFound";                                 //TODO als default null verwenden
+        int start = content.indexOf("Sendungsnummer:")+1;               //TODO die besipiel emails verwenden um das fuer mehr faelle aufzubohren, auch sollten nur zahlenfolgen entdeckt werden
         if (start != 0){
             int end = content.indexOf(' ',start);
-            OrderID = content.substring(start, end);
+            OrderID = content.substring(start, end);                //TODO return OrderID??
         }
         return "OrderID";
     }
 
     public String findDeliveryService(Email Email) {                             //filters the delivery service
-        String[] Services = {"dhl","hermes","ups","dpd","gls","fedex"};          //Only 6 biggest services
+        String[] Services = {"dhl","hermes","ups","dpd","gls","fedex"};          //Only 6 biggest services          //TODO "dhl" oder "ups" kommen so gut wie in jeder email vor, das geht so nicht
         String sender = Email.getSender().toLowerCase();
         for (int i = 0; i< Services.length; i++){
             int t = -1;
@@ -68,11 +68,11 @@ public class DeliveryWrapper {
                 return Services[i];
             }
         }
-        return "unknown";
+        return "unknown";                       //TODO als default bitte einfach null
     }
 
     public String findTag(Email Email) {
-        return Email.getSubject();
+        return Email.getSubject();                      //TODO eventuell noch absender dazu?
     }
 
 
