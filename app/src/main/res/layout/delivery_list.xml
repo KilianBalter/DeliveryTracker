@@ -6,43 +6,25 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:id="@+id/scrollView"
+        android:id="@+id/listScrollWrapper"
         android:layout_width="0dp"
         android:layout_height="659dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/listHeader"
         app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
-            android:id="@+id/scrollLayout"
+            android:id="@+id/listContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?android:attr/listDivider" />
-        </LinearLayout>
+            android:orientation="vertical"/>
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/listHeader"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginTop="4dp"

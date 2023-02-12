@@ -19,9 +19,10 @@ public class Filter {
      */
     public static void filter(Email email, Context context) {
         LinkFilter linkFilter = new LinkFilter();
-        double trackingEmail;
+        double trackingEmail = 0;
 
-        trackingEmail = linkFilter.filter(email);
+        if(RegexFilter.filter(email))
+            trackingEmail = linkFilter.filter(email);
 
         if (trackingEmail == 1.0)
             AiFilter.train(email, true);
@@ -31,8 +32,7 @@ public class Filter {
 
 
         if (trackingEmail > 0.7) {
-            //TODO PACkagewrapper
-
+            //TODO packageWrapper
 
             List<Email> emails = new LinkedList<>();
             emails.add(email);

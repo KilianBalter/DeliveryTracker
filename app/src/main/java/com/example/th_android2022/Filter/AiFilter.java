@@ -23,7 +23,7 @@ public class AiFilter {
     /**
      * every link in the email gets send to a server. There it gets evaluated by an ai model and the result gets returned.
      *
-     * @param email {@link Email} to be filterd
+     * @param email {@link Email} to be filtered
      * @return likelihood of email being a tracking-email
      */
     public static double filter(Email email) {
@@ -34,7 +34,7 @@ public class AiFilter {
 //                String ip = InetAddress.getLocalHost().getHostAddress().replace(".", "");
 //
 //                //upload data to be analysed by ai
-//                URL url = new URL("http://172.16.146.7:5666/ai/data?email=test%40th-bingen.de&password=1234&dataName=" + ip);     //TODO replace with actuall ip
+//                URL url = new URL("http://172.16.146.7:5666/ai/data?email=test%40th-bingen.de&password=1234&dataName=" + ip);     //TODO replace with actual ip
 //                URLConnection con = url.openConnection();
 //                HttpURLConnection http = (HttpURLConnection) con;
 //                http.setRequestMethod("POST"); // PUT is another valid option
@@ -52,14 +52,14 @@ public class AiFilter {
 //                }
 //
 //                //start ai
-//                url = new URL("http://172.16.146.7:5666/ai/pipeline/Pipeline?email=test%40th-bingen.de&password=1234");     //TODO replace with actuall ip
+//                url = new URL("http://172.16.146.7:5666/ai/pipeline/Pipeline?email=test%40th-bingen.de&password=1234");     //TODO replace with actual ip
 //                con = url.openConnection();
 //                con.connect();
 //
 //                //get ai result
 //                for (int i = 0; i < 5; i++) {
 //                    try {
-//                        url = new URL("http://172.16.146.7:5666/ai/data/" + ip + "_PipelineEval?email=test%40th-bingen.de&password=1234");     //TODO replace with actuall ip
+//                        url = new URL("http://172.16.146.7:5666/ai/data/" + ip + "_PipelineEval?email=test%40th-bingen.de&password=1234");     //TODO replace with actual ip
 //                        con = url.openConnection();
 //                        http = (HttpURLConnection) con;
 //
@@ -85,19 +85,19 @@ public class AiFilter {
     /**
      * uploads the trackingLink of the email and the likelihood of isTrackingEmail to the ai server
      *
-     * @param email           {@link Email} to be used as trainigdata
+     * @param email           {@link Email} to be used as training data
      * @param isTrackingEmail likelihood of being tracking email
      */
     public static void train(Email email, boolean isTrackingEmail) {
         try {
-            URL url = new URL("http://172.16.146.7:5666/ai/data?email=test%40th-bingen.de&password=1234&dataName=DeliveryTracker");     //TODO replace with actuall ip
+            URL url = new URL("http://172.16.146.7:5666/ai/data?email=test%40th-bingen.de&password=1234&dataName=DeliveryTracker");     //TODO replace with actual ip
             URLConnection con = url.openConnection();
             HttpURLConnection http = (HttpURLConnection) con;
             http.setRequestMethod("POST"); // PUT is another valid option
             http.setDoOutput(true);
             http.setConnectTimeout(2000);
             byte[] out = (isTrackingEmail + "," + getLinkContext(email, email.getTrackingLink())).getBytes(StandardCharsets.UTF_8);
-            System.out.println("trainig ai with " + isTrackingEmail + "," + getLinkContext(email, email.getTrackingLink()));
+            System.out.println("training ai with " + isTrackingEmail + "," + getLinkContext(email, email.getTrackingLink()));
             int length = out.length;
 
             http.setFixedLengthStreamingMode(length);
@@ -107,7 +107,7 @@ public class AiFilter {
                 os.write(out);
             }
 
-            System.out.println(http.getResponseMessage());      //DONT DELETE! Doesnt work without
+            System.out.println(http.getResponseMessage());      //DON'T DELETE! Doesn't work without
             System.out.println(http.getResponseCode());
 
             System.out.println("done training");

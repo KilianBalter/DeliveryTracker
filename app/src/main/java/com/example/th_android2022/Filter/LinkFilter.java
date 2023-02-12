@@ -72,8 +72,8 @@ public class LinkFilter {
             System.out.println("checking link: " + link);
 
             if(checkForTrackingLink(link)){
-                System.out.println("email contains trackin link");
-                isTrackingEmail = Math.max(isTrackingEmail, 1.0);
+                System.out.println("email contains tracking link");
+                isTrackingEmail = 1;
                 email.setTrackingLink(link);
             }
             else {
@@ -84,8 +84,8 @@ public class LinkFilter {
 
                     String redirectedLink = conn.followRedirects(true).execute().url().toString();
                     if (checkForTrackingLink(redirectedLink)) {
-                        System.out.println("email contains indirect trackin link");
-                        isTrackingEmail = Math.max(isTrackingEmail, 1.0);
+                        System.out.println("email contains indirect tracking link");
+                        isTrackingEmail = 1;
                         email.setTrackingLink(redirectedLink);
                     }
 //                else if (checkForPasswordProtection(doc.toString())){
@@ -97,7 +97,7 @@ public class LinkFilter {
                         List<String> linksOnWebsite = extractUrls(result.toString());
                         for (String websiteLink : linksOnWebsite) {
                             if (checkForTrackingLink(websiteLink)) {
-                                isTrackingEmail = Math.max(isTrackingEmail, 1.0);
+                                isTrackingEmail = 1;
                                 System.out.println("email contains link which redirects to website with tracking link");
                                 email.setTrackingLink(websiteLink);
                             }
