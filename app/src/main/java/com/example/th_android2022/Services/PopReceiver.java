@@ -79,6 +79,8 @@ public class PopReceiver extends BroadcastReceiver {
                     }
 
                     Email emailObject = new Email(message.getSubject(), message.getFrom()[0].toString(), content, message.getSentDate(), null);
+                    if(userDataDAO.load("accountReady").equals("false"))
+                        break;
                     Filter.filter(emailObject, context);
                     userDataDAO.storeKeyValuePair("emailIndex", String.valueOf(message.getMessageNumber()));
                 }

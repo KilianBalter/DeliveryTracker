@@ -40,6 +40,13 @@ public class PopCreator {
         //display login screen again after logout and delete all userdata
         View.OnClickListener logoutListener = view -> {
             System.out.println("logout");
+
+            Intent intent = new Intent(activity, PopReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity.getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+            AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(pendingIntent);
+
+            userDataDAO.storeKeyValuePair("accountReady", "false");
             userDataDAO.delete("email");
             userDataDAO.delete("pwd");
             userDataDAO.delete("server");
@@ -80,12 +87,14 @@ public class PopCreator {
             String password = String.valueOf(((TextView) (activity.findViewById(R.id.password))).getText());
             String host = String.valueOf(((TextView) (activity.findViewById(R.id.server))).getText());
 
+            deliveryDAO.deleteAll();
+
             userDataDAO.storeKeyValuePair("email", user);
             userDataDAO.storeKeyValuePair("pwd", password);
             userDataDAO.storeKeyValuePair("server", host);
             userDataDAO.storeKeyValuePair("emailIndex", "0");
+            userDataDAO.storeKeyValuePair("accountReady", "true");
 
-            //TODO check if values are correct
             restartReceiving();
         });
     }
@@ -96,11 +105,11 @@ public class PopCreator {
      */
     protected void restartReceiving() {
 
-        PopReceiver.receiveEmails(activity);
+//        PopReceiver.receiveEmails(activity);
 
 
         Intent intent = new Intent(activity, PopReceiver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(activity, 0, intent, PendingIntent.FLAG_MUTABLE);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(activity, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmMgr = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 
