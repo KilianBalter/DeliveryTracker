@@ -37,10 +37,10 @@ public class EmailDisplay {
     View.OnClickListener logout;
 
     /**
-     * creates new EmailDisplay
-     * logout will be the action if the user logs out
+     * Creates new EmailDisplay.
+     * Logout will be the action if the user logs out
      *
-     * @param activity application activity
+     * @param activity Application activity
      * @param logout   onClickListener to logout the user
      */
     public EmailDisplay(Activity activity, View.OnClickListener logout) {
@@ -49,7 +49,7 @@ public class EmailDisplay {
     }
 
     /**
-     * shows email list and sets onClickListener
+     * Shows email list and sets onClickListener
      */
     public void show() {
         activity.setContentView(R.layout.delivery_list);
@@ -61,7 +61,7 @@ public class EmailDisplay {
     }
 
     /**
-     * fills email list with data from database
+     * Fills email list with data from database
      */
     public void reload() {
         Log.i("EmailDisplay","reloading...");

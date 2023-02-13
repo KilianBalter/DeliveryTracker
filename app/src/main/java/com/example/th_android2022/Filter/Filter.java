@@ -8,10 +8,10 @@ import com.example.th_android2022.Entities.Email;
 public class Filter {
 
     /**
-     * filters tracking email and sends them to DeliveryWrapper
+     * Filters tracking email and sends them to DeliveryWrapper
      *
-     * @param email   to be filtered
-     * @param context of application
+     * @param email   Email to be filtered
+     * @param context Context of application
      */
     public static void filter(Email email, Context context) {
         LinkFilter linkFilter = new LinkFilter();
