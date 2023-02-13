@@ -2,7 +2,11 @@ package com.example.th_android2022;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.content.res.Resources;
 import android.util.Log;
@@ -24,6 +28,8 @@ import com.example.th_android2022.Entities.Email;
 import com.example.th_android2022.Filter.AiFilter;
 import com.google.common.collect.Lists;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class EmailDisplay {
@@ -75,9 +81,9 @@ public class EmailDisplay {
             textView.setTextSize(16);
             layout.addView(textView);
         } else {
-            for (Delivery delivery : Lists.reverse(deliveries)) {
-                //TODO filter delivery by status
-
+            //Sort deliveries by status. To change order, change order of Status enum definitions
+            deliveries.sort(Comparator.comparing(Delivery::getStatus));
+            for (Delivery delivery : deliveries) {
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int height = displayMetrics.heightPixels;
@@ -100,10 +106,21 @@ public class EmailDisplay {
                 //create textView
                 TextView textView = new TextView(activity);
                 String text = delivery.getTag() + "\n";
-                text += "Order: " + delivery.getOrderId() + "\n";
-                text += "Status: " + delivery.getStatus() + "\n";
-                text += "Service: " + delivery.getDeliveryService();
-                textView.setText(text);
+                text += "Order: " + (delivery.getOrderId() == null ? "?" : delivery.getOrderId()) + "\n";
+                text += "Status: ";
+                Delivery.Status status = delivery.getStatus();
+                String service = "Service: " + (delivery.getDeliveryService() == null ? "?" : delivery.getDeliveryService());
+                Spannable spannable = new SpannableString(text + status + "\n" + service);
+                //Color status text depending on status
+                int color;
+                switch(status) {
+                    case FALSE: color = Color.RED;          break;
+                    case ACTIVE: color = Color.YELLOW;      break;
+                    case DELIVERED: color = Color.GREEN;    break;
+                    default: color = Color.WHITE;
+                }
+                spannable.setSpan(new ForegroundColorSpan(color), text.length(), (text + status).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textView.setText(spannable);
                 textView.setOnClickListener(new EmailListLoader(delivery));
                 textView.setId(View.generateViewId());
                 textView.setTextSize(16);

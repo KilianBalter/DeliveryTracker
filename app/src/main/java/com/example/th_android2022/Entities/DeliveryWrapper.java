@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class DeliveryWrapper {
     private static final Pattern ORDER_ID_PATTERN = Pattern.compile("(\\d|-)+");
-
+    private static final String[] ORDER_ID_PREFIXES = {"Sendungsnummer ", "Sendungsnummer: ", "Sendung ", "Bestellung ", "Bestellnr. ", "Bestellung Nr. "};
 
     public static void extractData(Email email, Context appContext){
         DeliveryDAO DAO = new DeliveryDAO(appContext);
@@ -27,20 +27,19 @@ public class DeliveryWrapper {
 
     private static String findOrderID(String content) {
         String orderID = null;
-        String[] prefixes = {"Sendungsnummer ", "Sendungsnummer: ", "Sendung ", "Bestellung ", "Bestellnr. ", "Bestellung Nr. "};
         int start = -1;
         int i = 0;
 
-        while(i < prefixes.length && start == -1) {
-            if(content.contains(prefixes[i])) {
-                start = content.indexOf(prefixes[i]) + prefixes[i].length();
+        while(i < ORDER_ID_PREFIXES.length && start == -1) {
+            if(content.contains(ORDER_ID_PREFIXES[i])) {
+                start = content.indexOf(ORDER_ID_PREFIXES[i]) + ORDER_ID_PREFIXES[i].length();
 
                 int end = content.indexOf(' ',start);
                 orderID = content.substring(start, end);
 
                 if(!ORDER_ID_PATTERN.matcher(orderID).matches()) {
                     start = -1;
-                    orderID = "ID not found";
+                    orderID = null;
                 }
             }
 

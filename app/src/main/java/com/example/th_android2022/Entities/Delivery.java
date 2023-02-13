@@ -1,5 +1,6 @@
 package com.example.th_android2022.Entities;
 
+import java.util.Comparator;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -10,7 +11,7 @@ public class Delivery extends RealmObject {
 
     public enum Status
     {
-        ACTIVE, DELIVERED, FALSE
+        DELIVERED, ACTIVE, FALSE
     }
 
     @PrimaryKey
@@ -102,4 +103,5 @@ public class Delivery extends RealmObject {
     public String getDeliveryService() {
         return deliveryService;
     }
+
 }
