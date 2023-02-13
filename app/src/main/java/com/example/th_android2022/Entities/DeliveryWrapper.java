@@ -9,18 +9,12 @@ import java.util.regex.Pattern;
 public class DeliveryWrapper {
     private static final Pattern ORDER_ID_PATTERN = Pattern.compile("(\\d|-)+");
 
-    //private static Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-    //private static DeliveryDAO DAO = new DeliveryDAO(appContext);
-
-    /*public void newEmail(Email email){
-        extractData(email);
-    }*/
 
     public static void extractData(Email email, Context appContext){
         DeliveryDAO DAO = new DeliveryDAO(appContext);
         String content = email.getContent().toLowerCase();
         String orderID = findOrderID(content);
-        if (orderID.equals("ID not found")){                                                             //if no orderID is found in the email content, try to find it in the subject
+        if (orderID == null){                                                             //if no orderID is found in the email content, try to find it in the subject
             orderID = findOrderID(email.getSubject());
         }
         String deliveryService = findDeliveryService(email);
@@ -32,7 +26,7 @@ public class DeliveryWrapper {
     }
 
     private static String findOrderID(String content) {
-        String orderID = "ID not found";
+        String orderID = null;
         String[] prefixes = {"Sendungsnummer ", "Sendungsnummer: ", "Sendung ", "Bestellung ", "Bestellnr. ", "Bestellung Nr. "};
         int start = -1;
         int i = 0;
@@ -63,7 +57,7 @@ public class DeliveryWrapper {
             if (full.contains(service))
                 return service;
         }
-        return "unknown";
+        return null;
     }
 
     private static String findTag(Email Email) {
