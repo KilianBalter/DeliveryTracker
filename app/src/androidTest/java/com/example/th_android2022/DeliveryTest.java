@@ -28,7 +28,7 @@ public class DeliveryTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DeliveryDAO repo = new DeliveryDAO(appContext);
         Delivery d = new Delivery();
-        d.setStatus(Delivery.Status.ACTIVE);
+        d.setStatus("ACTIVE");
         d.setTag("test");
         repo.insertOnlySingleDelivery(d);
         List<Delivery> result = repo.findAllDelivery();

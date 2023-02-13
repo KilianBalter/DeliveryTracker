@@ -8,12 +8,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Delivery extends RealmObject {
 
-
-    public enum Status                  //TODO Realm kann keine enum speichern, irendeinen wrapper verwenden
-    {
-        ACTIVE, DELIVERED, FALSE
-    }
-
     @PrimaryKey
     private long id;
 
@@ -21,7 +15,7 @@ public class Delivery extends RealmObject {
 
     private String tag;
 
-    private Status status;
+    private String status;
 
     private String orderId;
 
@@ -58,7 +52,7 @@ public class Delivery extends RealmObject {
         this.tag = tag;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -82,7 +76,7 @@ public class Delivery extends RealmObject {
         return tag;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
