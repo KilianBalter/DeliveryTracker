@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             activity.runOnUiThread(() -> Toast.makeText(activity, toast, Toast.LENGTH_LONG).show());
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

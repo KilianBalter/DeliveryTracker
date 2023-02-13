@@ -3,6 +3,7 @@ package com.example.th_android2022.Services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.th_android2022.Databases.UserDataDAO;
 import com.example.th_android2022.Entities.Email;
@@ -23,9 +24,9 @@ public class PopReceiver extends BroadcastReceiver {
 
 
     /**
-     * connects to pop server and stores all unread emails in database
+     * Connects to pop server and stores all unread emails in database
      *
-     * @param context context of the application
+     * @param context Context of the application
      */
     public static void receiveEmails(Context context) {
         new Thread(() -> {
@@ -59,8 +60,8 @@ public class PopReceiver extends BroadcastReceiver {
 
                 // retrieve the messages from the folder in an array
                 Message[] messages = inbox.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
-                System.out.println("messages.length---" + messages.length);
-                if (emailIndex == 0) {   //dont load all messages on first connect. Old emails are unimportant
+                Log.i("PopReceiver", "messages.length: " + messages.length);
+                if (emailIndex == 0) {   //don't load all messages on first connect. Old emails are unimportant
                     emailIndex = messages.length - 30;
                 }
                 for (int i = emailIndex, n = messages.length; i < n; i++) {
@@ -97,7 +98,7 @@ public class PopReceiver extends BroadcastReceiver {
     }
 
     /**
-     * calls receiveEmails
+     * Calls receiveEmails
      * This method is inherited from BroadcastReceiver. It will be called by alarmClock.
      *
      * @param context {@link Context} of the application
@@ -105,7 +106,7 @@ public class PopReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("recieved alarm");
+        Log.i("PopReceiver", "Received alarm");
         receiveEmails(context);
     }
 }

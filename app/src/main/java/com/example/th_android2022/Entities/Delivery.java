@@ -1,5 +1,7 @@
 package com.example.th_android2022.Entities;
 
+import androidx.annotation.NonNull;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -27,11 +29,11 @@ public class Delivery extends RealmObject {
 
     private String deliveryService;
 
-    public Delivery() {  //idk wtf
+    public Delivery() {
         emailList = new RealmList<>();
     }
 
-    public Delivery(String tag, Status status, String orderId, String deliveryService) {
+    public Delivery(String tag, @NonNull Status status, String orderId, String deliveryService) {
         this.emailList = new RealmList<>();
         this.tag = tag;
         this.status = status.toString();
@@ -39,7 +41,7 @@ public class Delivery extends RealmObject {
         this.deliveryService = deliveryService;
     }
 
-    public Delivery(Delivery d) {
+    public Delivery(@NonNull Delivery d) {
         this.id = d.id;
         this.emailList = new RealmList<>();
         for (Email e: d.emailList){

@@ -19,9 +19,9 @@ public class ConfirmListener implements View.OnClickListener {
     }
 
     /**
-     * shows the confirm screen on the ui and sets onClickListener of yes and no button
+     * Shows the confirm screen on the UI and sets onClickListener of yes and no button
      *
-     * @param view
+     * @param view The view
      */
     @Override
     public void onClick(View view) {

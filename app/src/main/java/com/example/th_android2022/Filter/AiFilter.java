@@ -21,10 +21,10 @@ public class AiFilter {
 
 
     /**
-     * every link in the email gets send to a server. There it gets evaluated by an ai model and the result gets returned.
+     * Every link in the email gets send to a server. There it gets evaluated by an ai model and the result gets returned.
      *
      * @param email {@link Email} to be filtered
-     * @return likelihood of email being a tracking-email
+     * @return Likelihood of email being a tracking-email
      */
     public static double filter(Email email) {
         double result = 0.0;
@@ -45,7 +45,7 @@ public class AiFilter {
 //                int length = out.length;
 //
 //                http.setFixedLengthStreamingMode(length);
-////            http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+//                http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 //                http.connect();
 //                try (OutputStream os = http.getOutputStream()) {
 //                    os.write(out);
@@ -83,10 +83,10 @@ public class AiFilter {
     }
 
     /**
-     * uploads the trackingLink of the email and the likelihood of isTrackingEmail to the ai server
+     * Uploads the trackingLink of the email and the likelihood of isTrackingEmail to the ai server
      *
      * @param email           {@link Email} to be used as training data
-     * @param isTrackingEmail likelihood of being tracking email
+     * @param isTrackingEmail Likelihood of being tracking email
      */
     public static void train(Email email, boolean isTrackingEmail) {
         try {
@@ -117,13 +117,13 @@ public class AiFilter {
     }
 
     /**
-     * extracts important information from the email which can be used to train an ai.
-     * extracted information are: 40 characters before the link and subject of the email
-     * data gets cleaned of special characters
+     * Extracts important information from the email which can be used to train an ai.
+     * Extracted information is: 40 characters before the link and subject of the email.
+     * Data gets cleaned of special characters
      *
-     * @param email
-     * @param link
-     * @return special character free String
+     * @param email Email to extract information from
+     * @param link Link within email to be analyzed
+     * @return Special character free String
      */
     private static String getLinkContext(Email email, String link) {
         String text = email.getContent();

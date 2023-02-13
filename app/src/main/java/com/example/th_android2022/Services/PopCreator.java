@@ -26,10 +26,10 @@ public class PopCreator {
 
 
     /**
-     * creates a PopReceiver. If no Userdata like email and password are present, the ui shows a login screen.
+     * Creates a PopReceiver. If no Userdata like email and password are present, the ui shows a login screen.
      * after userdata has been entered, an alarm will be set to constantly check for new emails and the email list is shown in the ui
      *
-     * @param activity
+     * @param activity App context
      */
     public PopCreator(AppCompatActivity activity) {
 
@@ -72,8 +72,8 @@ public class PopCreator {
     }
 
     /**
-     * shows login screen on ui
-     * calls restartReceiving after login
+     * Shows login screen on UI.
+     * Calls restartReceiving after login
      */
     public void createAccount() {
         System.out.println("creating account");
@@ -101,7 +101,7 @@ public class PopCreator {
 
 
     /**
-     * sets alarm to constantly check for new emails. shows email list on ui
+     * Sets alarm to constantly check for new emails. Shows email list on UI
      */
     protected void restartReceiving() {
 

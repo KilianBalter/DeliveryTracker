@@ -2,6 +2,7 @@ package com.example.th_android2022.Databases;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class UserDataDAO {
 
@@ -10,10 +11,10 @@ public class UserDataDAO {
     private final Context context;
 
     /**
-     * creates a new database with the name preferencesName
+     * Creates a new database with the name preferencesName
      *
-     * @param context         application context
-     * @param preferencesName name of database
+     * @param context         Application context
+     * @param preferencesName Name of database
      */
     public UserDataDAO(Context context, String preferencesName) {
         this.context = context;
@@ -21,34 +22,34 @@ public class UserDataDAO {
     }
 
     /**
-     * @param key
-     * @return value stored under key
+     * @param key The key to look up
+     * @return Value stored under key
      */
     public String load(String key) {
         SharedPreferences shared = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         String result = shared.getString(key, null);
-        System.out.println("loading Userdata: " + key);
+        Log.i("UserDataDAO","Loading Userdata: " + key);
         return result;
     }
 
 
     /**
-     * deletes value stored under key
+     * Deletes value stored under key
      *
-     * @param key
+     * @param key The key
      */
     public void delete(String key) {
         SharedPreferences shared = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         shared.edit().remove(key).commit();
-        System.out.println("deleting Userdata: " + key);
+        Log.i("UserDataDAO","Deleting Userdata: " + key);
     }
 
     /**
-     * @param key   used for identifying
-     * @param value to be stored
+     * @param key   Used for identifying
+     * @param value Value to be stored
      */
     public void storeKeyValuePair(String key, String value) {
-        System.out.println("storing userdata: " + key);
+        Log.i("UserDataDAO","Storing Userdata: " + key);
         SharedPreferences shared = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = shared.edit();
         editor.putString(key, value);

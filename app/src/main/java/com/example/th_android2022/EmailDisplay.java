@@ -21,14 +21,13 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 
 import com.example.th_android2022.Databases.DeliveryDAO;
 import com.example.th_android2022.Entities.Delivery;
 import com.example.th_android2022.Entities.Email;
 import com.example.th_android2022.Filter.AiFilter;
-import com.google.common.collect.Lists;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -70,16 +69,16 @@ public class EmailDisplay {
 
         List<Delivery> deliveries = repo.findAllDelivery();
 
-        LinearLayout layout = (LinearLayout) activity.findViewById(R.id.listContent);
+        LinearLayout deliveryList = (LinearLayout) activity.findViewById(R.id.listContent);
 
-        layout.removeAllViews();
+        deliveryList.removeAllViews();
 
         if (deliveries.size() == 0) {
             TextView textView = new TextView(activity);
             String text = "scanning emails ...";
             textView.setText(text);
             textView.setTextSize(16);
-            layout.addView(textView);
+            deliveryList.addView(textView);
         } else {
             //Sort deliveries by status. To change order, change order of Status enum definitions
             deliveries.sort(Comparator.comparing(Delivery::getStatus));
@@ -88,11 +87,10 @@ public class EmailDisplay {
                 activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int height = displayMetrics.heightPixels;
 
-                //create new row
+                //Create new row (delivery)
                 ConstraintLayout row = new ConstraintLayout(activity);
                 row.setId(View.generateViewId());
-                layout.addView(row);
-                //row.setBackgroundResource(R.drawable.layout_bg);
+                deliveryList.addView(row);
 
                 //Add divider
                 int oneDP = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Resources.getSystem().getDisplayMetrics());
@@ -100,11 +98,11 @@ public class EmailDisplay {
                 LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2 * oneDP);
                 dividerParams.setMargins(0, 3 * oneDP, 0, 3 * oneDP);
                 divider.setLayoutParams(dividerParams);
-                divider.setBackgroundColor(activity.getResources().getColor(R.color.blue_app));
-                layout.addView(divider);
+                divider.setBackgroundColor(ContextCompat.getColor(activity, R.color.blue_app));
+                deliveryList.addView(divider);
 
-                //create textView
-                TextView textView = new TextView(activity);
+                //Create textView to display Tag, Status and Service
+                TextView infoText = new TextView(activity);
                 String text = delivery.getTag() + "\n";
                 text += "Order: " + (delivery.getOrderId() == null ? "?" : delivery.getOrderId()) + "\n";
                 text += "Status: ";
@@ -120,17 +118,17 @@ public class EmailDisplay {
                     default: color = Color.WHITE;
                 }
                 spannable.setSpan(new ForegroundColorSpan(color), text.length(), (text + status).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                textView.setText(spannable);
-                textView.setOnClickListener(new EmailListLoader(delivery));
-                textView.setId(View.generateViewId());
-                textView.setTextSize(16);
-                textView.setPadding(15,0,15,0);
-                row.addView(textView);
+                infoText.setText(spannable);
+                infoText.setOnClickListener(new EmailListLoader(delivery));
+                infoText.setId(View.generateViewId());
+                infoText.setTextSize(16);
+                infoText.setPadding(15,0,15,0);
+                row.addView(infoText);
 
-                //create stopButton
+                //Create stopButton
                 ImageButton stopButton = new ImageButton(activity);
                 row.addView(stopButton);
-                View.OnClickListener hideDelivery = new HideDeliveryListener(Delivery.Status.FALSE, delivery, layout, row, false);
+                View.OnClickListener hideDelivery = new HideDeliveryListener(Delivery.Status.FALSE, delivery, deliveryList, row, false);
                 View.OnClickListener deliveredListener = new ConfirmListener(activity, "Hide this because it was not a delivery?", hideDelivery, (c) -> {
                     show();
                     reload();
@@ -146,10 +144,10 @@ public class EmailDisplay {
                 stopButton.setBackgroundResource(R.drawable.layout_bg);
 
 
-                //create deliveredButton
+                //Create deliveredButton
                 ImageButton deliveredButton = new ImageButton(activity);
                 row.addView(deliveredButton);
-                hideDelivery = new HideDeliveryListener(Delivery.Status.DELIVERED, delivery, layout, row, true);
+                hideDelivery = new HideDeliveryListener(Delivery.Status.DELIVERED, delivery, deliveryList, row, true);
                 deliveredListener = new ConfirmListener(activity, "Has the Package been delivered?", hideDelivery, (c) -> {
                     show();
                     reload();
@@ -165,19 +163,17 @@ public class EmailDisplay {
                 deliveredButton.setBackgroundResource(R.drawable.layout_bg);
 
 
-                //place all elements in row
+                //Place all elements in row
                 ConstraintSet rowSet = new ConstraintSet();
                 rowSet.clone(row);
-                rowSet.connect(textView.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT);
-                //rowSet.connect(textView.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 10);
+                rowSet.connect(infoText.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT);
                 rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT,15);
                 rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, deliveredButton.getId(), ConstraintSet.LEFT, 5);
                 rowSet.connect(stopButton.getId(), ConstraintSet.BOTTOM, row.getId(), ConstraintSet.BOTTOM);
                 rowSet.connect(deliveredButton.getId(), ConstraintSet.BOTTOM, row.getId(), ConstraintSet.BOTTOM);
-
                 rowSet.applyTo(row);
             }
-            layout.invalidate();
+            deliveryList.invalidate();
         }
     }
 
@@ -198,7 +194,7 @@ public class EmailDisplay {
             TextView emails = new TextView(activity);
             String email = "";
             for (Email e : d.getEmailList()) {
-                //If tracking link is present, add Button to TextView that opens tracking link in browser intent
+                //If tracking link is present, add Button to TextView that opens tracking link in browser
                 if(e.getTrackingLink() != null) {
                     Button openLink = new Button(activity);
                     openLink.setOnClickListener(l -> {
@@ -207,7 +203,7 @@ public class EmailDisplay {
                         activity.startActivity(webIntent);
                     });
                     openLink.setText("Open Tracking Link");
-                    openLink.setBackgroundColor(0xFF15A4C8);
+                    openLink.setBackgroundColor(ContextCompat.getColor(activity, R.color.teal_700));
                     layoutEmails.addView(openLink);
                 }
                 email += e.getContent() + "\n#############################################\n\n";

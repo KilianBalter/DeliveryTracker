@@ -2,13 +2,8 @@ package com.example.th_android2022.Filter;
 
 import android.content.Context;
 
-import com.example.th_android2022.Databases.DeliveryDAO;
-import com.example.th_android2022.Entities.Delivery;
 import com.example.th_android2022.Entities.DeliveryWrapper;
 import com.example.th_android2022.Entities.Email;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class Filter {
 
