@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.content.res.Resources;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
@@ -58,7 +59,7 @@ public class EmailDisplay {
      * fills email list with data from database
      */
     public void reload() {
-        System.out.println("reloading...");
+        Log.i("EmailDisplay","reloading...");
         DeliveryDAO repo = new DeliveryDAO(activity);
 
         List<Delivery> deliveries = repo.findAllDelivery();
@@ -99,20 +100,20 @@ public class EmailDisplay {
                 //create textView
                 TextView textView = new TextView(activity);
                 String text = delivery.getTag() + "\n";
-                if (delivery.getOrderId() != null)
-                    text += "Order: " + delivery.getOrderId() + "\n";
-                if (delivery.getStatus() != null)
-                    text += "Status: " + delivery.getStatus();
+                text += "Order: " + delivery.getOrderId() + "\n";
+                text += "Status: " + delivery.getStatus() + "\n";
+                text += "Service: " + delivery.getDeliveryService();
                 textView.setText(text);
                 textView.setOnClickListener(new EmailListLoader(delivery));
                 textView.setId(View.generateViewId());
                 textView.setTextSize(16);
+                textView.setPadding(15,0,15,0);
                 row.addView(textView);
 
                 //create stopButton
                 ImageButton stopButton = new ImageButton(activity);
                 row.addView(stopButton);
-                View.OnClickListener hideDelivery = new HideDeliveryListener(delivery, layout, row, false);
+                View.OnClickListener hideDelivery = new HideDeliveryListener(Delivery.Status.FALSE, delivery, layout, row, false);
                 View.OnClickListener deliveredListener = new ConfirmListener(activity, "Hide this because it was not a delivery?", hideDelivery, (c) -> {
                     show();
                     reload();
@@ -131,7 +132,7 @@ public class EmailDisplay {
                 //create deliveredButton
                 ImageButton deliveredButton = new ImageButton(activity);
                 row.addView(deliveredButton);
-                hideDelivery = new HideDeliveryListener(delivery, layout, row, true);
+                hideDelivery = new HideDeliveryListener(Delivery.Status.DELIVERED, delivery, layout, row, true);
                 deliveredListener = new ConfirmListener(activity, "Has the Package been delivered?", hideDelivery, (c) -> {
                     show();
                     reload();
@@ -150,9 +151,13 @@ public class EmailDisplay {
                 //place all elements in row
                 ConstraintSet rowSet = new ConstraintSet();
                 rowSet.clone(row);
-                rowSet.connect(textView.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT, 10);
-                rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 0);
-                rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, deliveredButton.getId(), ConstraintSet.LEFT, 0);
+                rowSet.connect(textView.getId(), ConstraintSet.LEFT, row.getId(), ConstraintSet.LEFT);
+                //rowSet.connect(textView.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT, 10);
+                rowSet.connect(deliveredButton.getId(), ConstraintSet.RIGHT, row.getId(), ConstraintSet.RIGHT,15);
+                rowSet.connect(stopButton.getId(), ConstraintSet.RIGHT, deliveredButton.getId(), ConstraintSet.LEFT, 5);
+                rowSet.connect(stopButton.getId(), ConstraintSet.BOTTOM, row.getId(), ConstraintSet.BOTTOM);
+                rowSet.connect(deliveredButton.getId(), ConstraintSet.BOTTOM, row.getId(), ConstraintSet.BOTTOM);
+
                 rowSet.applyTo(row);
             }
             layout.invalidate();
@@ -203,13 +208,15 @@ public class EmailDisplay {
 
 
     class HideDeliveryListener implements View.OnClickListener {
+        Delivery.Status type;
         Delivery delivery;
         LinearLayout layout;
         ConstraintLayout row;
 
         boolean isTrackingEmail;
 
-        public HideDeliveryListener(Delivery delivery, LinearLayout layout, ConstraintLayout row, boolean isTrackingEmail) {
+        public HideDeliveryListener(Delivery.Status type, Delivery delivery, LinearLayout layout, ConstraintLayout row, boolean isTrackingEmail) {
+            this.type = type;
             this.delivery = delivery;
             this.layout = layout;
             this.row = row;
@@ -218,10 +225,12 @@ public class EmailDisplay {
 
         @Override
         public void onClick(View view) {
-
-
+            //Update status depending on which button was clicked
             DeliveryDAO dao = new DeliveryDAO(activity);
-            dao.deleteById(delivery.getId());               //TODO: set status instead of deleting
+            Delivery d = dao.findFirstById(delivery.getId());
+            d.setStatus(type);
+            dao.updateById(d);
+
             show();
             reload();
 

@@ -7,6 +7,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -16,6 +17,7 @@ import com.example.th_android2022.MainActivity;
 import com.example.th_android2022.R;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -63,6 +65,7 @@ public class DeliveryDAO {
      * @param delivery to be inserted
      */
     public void insertOnlySingleDelivery(Delivery delivery) {
+        Log.i("DAO Insert", "Inserting:\n" + delivery.getTag() + "\n" + delivery.getOrderId() + "\n" + delivery.getDeliveryService());
         Delivery mutableCopy = new Delivery(delivery);
 
         //set id o delivery
@@ -116,6 +119,8 @@ public class DeliveryDAO {
      * @param delivery delivery to be updated
      */
     public void updateOnlySingleDelivery(Delivery delivery) {
+        AtomicBoolean insertInstead = new AtomicBoolean(false);
+
         realm.executeTransaction(transactionRealm -> {
             Delivery storedDelivery = realm.where(Delivery.class).
                     equalTo("orderId", delivery.getOrderId()).
@@ -128,7 +133,27 @@ public class DeliveryDAO {
                 storedDelivery.setTag(delivery.getTag());
                 storedDelivery.setEmailList(delivery.getEmailList());
             } else {
-                insertOnlySingleDelivery(delivery);
+                insertInstead.set(true);
+            }
+        });
+
+        if(insertInstead.get())
+            insertOnlySingleDelivery(delivery);
+    }
+
+    public void updateById(Delivery delivery) {
+        realm.executeTransaction(transactionRealm -> {
+            Delivery storedDelivery = realm.where(Delivery.class).
+                    equalTo("id", delivery.getId()).
+                    findFirst();
+            if (storedDelivery != null) {
+                System.out.println("updating delivery " + delivery.getId());
+                notify("Update on your delivery", delivery.getTag());
+                storedDelivery.setStatus(delivery.getStatus());
+                storedDelivery.setTag(delivery.getTag());
+                storedDelivery.setEmailList(delivery.getEmailList());
+            } else {
+                Log.i("DeliveryDAO", "Id not found.");
             }
         });
     }
