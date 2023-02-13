@@ -49,7 +49,7 @@ public class DeliveryWrapper {
         d.setDeliveryService(DeliveryService);
         d.setTag(Tag);
         System.out.println(d);
-        DAO.insertOnlySingleDelivery(d);                                                            //Insert new delivery into Database
+        //DAO.insertOnlySingleDelivery(d);                                                            //Insert new delivery into Database
     }
 
     public String findOrderID(String content) {
