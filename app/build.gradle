@@ -1,6 +1,18 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:10.11.1"
+    }
+}
+
 plugins {
     id 'com.android.application'
 }
+
+apply plugin: "realm-android"
 
 android {
     namespace 'com.example.th_android2022'
@@ -26,18 +38,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/license.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-        exclude 'META-INF/notice.txt'
-        exclude 'META-INF/ASL2.0'
-        exclude("META-INF/*.kotlin_module")
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/*.kotlin_module']
+        }
     }
+
 }
 
 dependencies {
@@ -51,4 +57,26 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-android:1.23.0'
     implementation 'com.google.apis:google-api-services-gmail:v1-rev20220404-2.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-params:5.6.2")
+
+// android studio is ja komplett behindi man ...
+//    compileOnly 'org.projectlombok:lombok:1.18.24'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+//
+//    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+//    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'com.sun.mail:android-mail:1.6.2'
+    implementation 'com.sun.mail:android-activation:1.6.2'
+
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.11.3'
+
+
+    implementation 'info.guardianproject.netcipher:netcipher:2.1.0'
 }
