@@ -122,9 +122,7 @@ public class EmailDisplay {
                         case FALSE:
                             color = Color.RED;
                             break;
-                        case ACTIVE:
-                            color = Color.YELLOW;
-                            break;
+                        case ACTIVE: color = Color.argb(100, 231, 168, 1);      break;
                         case DELIVERED:
                             color = Color.GREEN;
                             break;
