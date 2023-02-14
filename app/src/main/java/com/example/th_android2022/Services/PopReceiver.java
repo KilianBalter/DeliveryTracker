@@ -17,6 +17,7 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.FlagTerm;
 
@@ -79,7 +80,7 @@ public class PopReceiver extends BroadcastReceiver {
                         content = message.getContent().toString();
                     }
 
-                    Email emailObject = new Email(message.getSubject(), message.getFrom()[0].toString(), content, message.getSentDate(), null);
+                    Email emailObject = new Email(message.getSubject(),  ((InternetAddress) message.getFrom()[0]).getPersonal(), content, message.getSentDate(), null);
                     if(userDataDAO.load("accountReady").equals("false"))
                         break;
                     Filter.filter(emailObject, context);
