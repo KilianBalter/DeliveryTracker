@@ -13,7 +13,7 @@ public class Delivery extends RealmObject {
 
     public enum Status
     {
-        DELIVERED, ACTIVE, FALSE
+        FALSE, DELIVERED, ACTIVE,
     }
 
     @PrimaryKey

@@ -29,28 +29,32 @@ public class DeliveryWrapper {
     }
 
     private static String findOrderID(String content) {
-        String orderID = null;
-        int start = -1;
-        int i = 0;
+        try {
+            String orderID = null;
+            int start = -1;
+            int i = 0;
 
-        //Search through email for common words that preface an orderID. If found check if follow up was actually an ID
-        while(i < ORDER_ID_PREFIXES.length && start == -1) {
-            if(content.contains(ORDER_ID_PREFIXES[i])) {
-                start = content.indexOf(ORDER_ID_PREFIXES[i]) + ORDER_ID_PREFIXES[i].length();
+            //Search through email for common words that preface an orderID. If found check if follow up was actually an ID
+            while (i < ORDER_ID_PREFIXES.length && start == -1) {
+                if (content.contains(ORDER_ID_PREFIXES[i])) {
+                    start = content.indexOf(ORDER_ID_PREFIXES[i]) + ORDER_ID_PREFIXES[i].length();
 
-                int end = content.indexOf(' ',start);
-                orderID = content.substring(start, end);
+                    int end = content.indexOf(' ', start);
+                    orderID = content.substring(start, end);
 
-                if(!ORDER_ID_PATTERN.matcher(orderID).matches()) {
-                    start = -1;
-                    orderID = null;
+                    if (!ORDER_ID_PATTERN.matcher(orderID).matches()) {
+                        start = -1;
+                        orderID = null;
+                    }
                 }
+
+                i++;
             }
 
-            i++;
+            return orderID;
+        }catch (Exception e){
+            return null;
         }
-
-        return orderID;
     }
 
     private static String findDeliveryService(@NonNull Email Email) {
@@ -65,9 +69,8 @@ public class DeliveryWrapper {
     }
 
     private static String findTag(@NonNull Email Email) {
-        return Email.getSubject();
+        return Email.getSender() + ": " + Email.getSubject();
     }
-
 
 }
 
