@@ -16,7 +16,7 @@ public class DeliveryWrapper {
     private static final String[] ORDER_ID_PREFIXES = {"Sendungsnummer ", "Sendungsnummer: ", "Sendung ", "Bestellung ", "Bestellnr. ", "Bestellung Nr. "};
 
 
-  public static void extractData(@NonNull Email email, Context appContext){
+    public static void extractData(@NonNull Email email, Context appContext){
         DeliveryDAO DAO = new DeliveryDAO(appContext);
         Delivery d;
         String content = email.getContent().toLowerCase();
@@ -52,31 +52,31 @@ public class DeliveryWrapper {
     }
 
     private static String findOrderID(String content) {
-      try {
-          String orderID = null;
-          int start = -1;
-          int i = 0;
+        try {
+            String orderID = null;
+            int start = -1;
+            int i = 0;
 
-          //Search through email for common words that preface an orderID. If found check if follow up was actually an ID
-          while (i < ORDER_ID_PREFIXES.length && start == -1) {
-              if (content.contains(ORDER_ID_PREFIXES[i])) {
-                  start = content.indexOf(ORDER_ID_PREFIXES[i]) + ORDER_ID_PREFIXES[i].length();
+            //Search through email for common words that preface an orderID. If found check if follow up was actually an ID
+            while (i < ORDER_ID_PREFIXES.length && start == -1) {
+                if (content.contains(ORDER_ID_PREFIXES[i])) {
+                    start = content.indexOf(ORDER_ID_PREFIXES[i]) + ORDER_ID_PREFIXES[i].length();
 
-                  int end = content.indexOf(' ', start);
-                  orderID = content.substring(start, end);
+                    int end = content.indexOf(' ', start);
+                    orderID = content.substring(start, end);
 
-                  if (!ORDER_ID_PATTERN.matcher(orderID).matches()) {
-                      start = -1;
-                      orderID = null;
-                  }
-              }
+                    if (!ORDER_ID_PATTERN.matcher(orderID).matches()) {
+                        start = -1;
+                        orderID = null;
+                    }
+                }
 
-              i++;
-          }
-          return orderID;
-      }catch (Exception e){
-          return null;
-      }
+                i++;
+            }
+            return orderID;
+        }catch (Exception e){
+            return null;
+        }
     }
 
     private static String findDeliveryService(@NonNull Email Email) {
@@ -91,9 +91,8 @@ public class DeliveryWrapper {
     }
 
     private static String findTag(@NonNull Email Email) {
-        return Email.getSubject();
+        return Email.getSender() + ": " + Email.getSubject();
     }
-
 
 }
 
