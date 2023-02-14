@@ -21,7 +21,7 @@ public class DeliveryWrapper {
         Delivery d;
         String content = email.getContent().toLowerCase();
         String orderID = findOrderID(email.getTrackingLink());
-        if (orderID == null) {                                                          //If no orderID is found in the tracking link, try to find it in the subject
+        if (orderID == null) {                                                          //if no orderID is found in the tracking link, try to find it in the subject
             orderID = findOrderID(email.getSubject());
         }
         if (orderID == null) {
