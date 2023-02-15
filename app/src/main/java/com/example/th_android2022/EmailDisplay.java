@@ -27,6 +27,7 @@ import com.example.th_android2022.Databases.DeliveryDAO;
 import com.example.th_android2022.Entities.Delivery;
 import com.example.th_android2022.Entities.Email;
 import com.example.th_android2022.Filter.AiFilter;
+import com.google.common.collect.Lists;
 
 import java.util.Comparator;
 import java.util.List;
@@ -81,8 +82,13 @@ public class EmailDisplay {
             deliveryList.addView(textView);
         } else {
             //Sort deliveries by status. To change order, change order of Status enum definitions
-            deliveries.sort(Comparator.comparing(Delivery::getStatus));
-            for (Delivery delivery : deliveries) {
+            try {
+                deliveries.sort(Comparator.comparing(Delivery::getStatus));
+            }
+            catch (Exception e){
+
+            }
+            for (Delivery delivery : Lists.reverse(deliveries)){
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int height = displayMetrics.heightPixels;
@@ -111,13 +117,20 @@ public class EmailDisplay {
                 Spannable spannable = new SpannableString(text + status + "\n" + service);
                 //Color status text depending on status
                 int color;
-                switch(status) {
-                    case FALSE: color = Color.RED;          break;
-                    case ACTIVE: color = Color.YELLOW;      break;
-                    case DELIVERED: color = Color.GREEN;    break;
-                    default: color = Color.WHITE;
-                }
-                spannable.setSpan(new ForegroundColorSpan(color), text.length(), (text + status).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                try {
+                    switch (status) {
+                        case FALSE:
+                            color = Color.RED;
+                            break;
+                        case ACTIVE: color = Color.argb(100, 231, 168, 1);      break;
+                        case DELIVERED:
+                            color = Color.GREEN;
+                            break;
+                        default:
+                            color = Color.WHITE;
+                    }
+                    spannable.setSpan(new ForegroundColorSpan(color), text.length(), (text + status).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }catch (Exception e){}
                 infoText.setText(spannable);
                 infoText.setOnClickListener(new EmailListLoader(delivery));
                 infoText.setId(View.generateViewId());

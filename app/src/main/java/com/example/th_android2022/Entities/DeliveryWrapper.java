@@ -1,56 +1,92 @@
 package com.example.th_android2022.Entities;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.th_android2022.Databases.DeliveryDAO;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
+import io.realm.RealmList;
+
 public class DeliveryWrapper {
-    private static final Pattern ORDER_ID_PATTERN = Pattern.compile("(\\d|-)+");
-    private static final String[] ORDER_ID_PREFIXES = {"Sendungsnummer ", "Sendungsnummer: ", "Sendung ", "Bestellung ", "Bestellnr. ", "Bestellung Nr. "};
+    private static final Pattern ORDER_ID_PATTERN = Pattern.compile("[a-zA-Z0-9]+");
+    private static final String[] ORDER_ID_PREFIXES = {"Sendungsnummer ", "Sendungsnummer: ", "idc=", "t_id=", "tracknum=", "tracking-id="};
+
 
     public static void extractData(@NonNull Email email, Context appContext){
         DeliveryDAO DAO = new DeliveryDAO(appContext);
-        String content = email.getContent().toLowerCase();
-        String orderID = findOrderID(content);
-        //If no orderID is found in the email content, try to find it in the subject
+        Delivery d;
+        String content = email.getContent();
+        String orderID = findOrderID(email.getTrackingLink());
+        //if no orderID is found in the tracking link, try to find it in the subject and then content
         if (orderID == null) {
             orderID = findOrderID(email.getSubject());
         }
+        if (orderID == null) {
+            orderID = findOrderID(content);
+        }
         String deliveryService = findDeliveryService(email);
         String tag = findTag(email);
-        Delivery d = new Delivery(tag, Delivery.Status.ACTIVE, orderID, deliveryService);
-        d.addEmail(email);
-
-        DAO.insertOnlySingleDelivery(d);
+        if (orderID == null || deliveryService == null) {
+            d = new Delivery(tag, Delivery.Status.ACTIVE, orderID, deliveryService);
+            d.addEmail(email);
+            DAO.insertOnlySingleDelivery(d);
+        }
+        else{
+            d = DAO.findFirstByOrderIdAndDeliveryService(orderID, deliveryService);
+            if (d == null){
+                d = new Delivery(tag, Delivery.Status.ACTIVE, orderID, deliveryService);
+                d.addEmail(email);
+                DAO.insertOnlySingleDelivery(d);
+            }
+            else {
+                List<Email> EmailList = d.getEmailList();
+                EmailList.add(email);
+                d.setEmailList(EmailList);
+                d.setTag(tag);
+                DAO.updateOnlySingleDelivery(d);
+            }
+        }
     }
 
     private static String findOrderID(String content) {
-        String orderID = null;
-        int start = -1;
-        int i = 0;
+        try {
+            String orderID = null;
+            int start = -1;
+            int i = 0;
 
-        //Search through email for common words that preface an orderID. If found check if follow up was actually an ID
-        while(i < ORDER_ID_PREFIXES.length && start == -1) {
-            if(content.contains(ORDER_ID_PREFIXES[i])) {
-                start = content.indexOf(ORDER_ID_PREFIXES[i]) + ORDER_ID_PREFIXES[i].length();
+            //Search through email for common words that preface an orderID. If found check if follow up was actually an ID
+            while (i < ORDER_ID_PREFIXES.length && start == -1) {
+                if (content.contains(ORDER_ID_PREFIXES[i])) {
+                    start = content.indexOf(ORDER_ID_PREFIXES[i]);
 
-                int end = content.indexOf(' ',start);
-                orderID = content.substring(start, end);
-
-                if(!ORDER_ID_PATTERN.matcher(orderID).matches()) {
-                    start = -1;
-                    orderID = null;
+                    if(start != -1) {
+                        start += ORDER_ID_PREFIXES[i].length();
+                        int end = start;
+                        while (end < content.length() && Character.isLetterOrDigit(content.charAt(end))) {
+                            end++;
+                        }
+                        orderID = content.substring(start, end);
+                        Log.i("findOrderID", "Potential orderID: " + orderID);
+                        if (!ORDER_ID_PATTERN.matcher(orderID).matches()) {
+                            start = -1;
+                            orderID = null;
+                        }
+                    }
                 }
+
+                i++;
             }
-
-            i++;
+            if(orderID != null)
+                Log.i("findOrderID", "Extracted: " + orderID + " from\n" + content);
+            return orderID;
+        }catch (Exception e){
+            return null;
         }
-
-        return orderID;
     }
 
     private static String findDeliveryService(@NonNull Email Email) {
@@ -65,9 +101,8 @@ public class DeliveryWrapper {
     }
 
     private static String findTag(@NonNull Email Email) {
-        return Email.getSubject();
+        return Email.getSender() + ": " + Email.getSubject();
     }
-
 
 }
 
